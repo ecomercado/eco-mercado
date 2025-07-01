@@ -170,6 +170,53 @@
         
         .category-pill .remove-category:hover { opacity: 1; }
 
+        /* Recuperación de contraseña */
+        .forgot-password-link {
+            color: #10b981;
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .forgot-password-link:hover {
+            text-decoration: underline;
+        }
+
+        .reset-form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        /* Selector de rol */
+        .role-selector {
+            display: flex;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.375rem;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .role-option {
+            flex: 1;
+            padding: 0.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .role-option:hover {
+            background-color: #f1f5f9;
+        }
+
+        .role-option.active {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .role-option input {
+            display: none;
+        }
+
         /* Media queries */
         @media (min-width: 1024px) {
             .sidebar { transform: translateX(0); }
@@ -223,13 +270,6 @@
                         Inventario
                     </button>
                     
-                    <button v-if="userRole === 'vendedor'" @click="changeView('clients')" 
-                            class="w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all"
-                            :class="currentView === 'clients' ? 'bg-accent text-white' : 'text-gray-700 hover:bg-gray-100'">
-                        <i class="fas fa-users mr-3"></i>
-                        Clientes
-                    </button>
-                    
                     <button v-if="userRole === 'vendedor'" @click="changeView('users')" 
                             class="w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all"
                             :class="currentView === 'users' ? 'bg-accent text-white' : 'text-gray-700 hover:bg-gray-100'">
@@ -275,7 +315,7 @@
                 
                 <div class="p-6">
                     <!-- Formulario de Login -->
-                    <form v-if="showLogin" @submit.prevent="login" class="space-y-4">
+                    <form v-if="showLogin && !showForgotPasswordForm" @submit.prevent="login" class="space-y-4">
                         <h2 class="text-xl font-light text-gray-800 mb-2">Iniciar Sesión</h2>
                         
                         <div>
@@ -295,34 +335,63 @@
                         <div class="text-center text-sm text-gray-500">
                             ¿No tienes cuenta? 
                             <a href="#" @click="toggleAuthForm" class="text-accent hover:underline">Regístrate aquí</a>
+                            <span class="mx-1">•</span>
+                            <a href="#" @click="showForgotPassword" class="text-accent hover:underline">¿Olvidaste tu contraseña?</a>
+                        </div>
+                    </form>
+                    
+                    <!-- Formulario de Recuperación de Contraseña -->
+                    <form v-if="showForgotPasswordForm" @submit.prevent="sendPasswordReset" class="space-y-4">
+                        <h2 class="text-xl font-light text-gray-800 mb-2">Recuperar Contraseña</h2>
+                        
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Email</label>
+                            <input v-model="resetEmail" type="email" class="w-full px-3 py-2 border rounded-lg focus-accent text-sm" required>
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-medium text-sm hover:bg-opacity-90 transition-all">
+                            Enviar Instrucciones
+                        </button>
+                        
+                        <div class="text-center text-sm text-gray-500">
+                            <a href="#" @click="showForgotPasswordForm = false" class="text-accent hover:underline">
+                                Volver al inicio de sesión
+                            </a>
                         </div>
                     </form>
                     
                     <!-- Formulario de Registro -->
-                    <form v-else-if="!showVerification" @submit.prevent="validateEmailBeforeSignup" class="space-y-4">
+                    <form v-else-if="!showVerification" @submit.prevent="signup" class="space-y-4">
                         <h2 class="text-xl font-light text-gray-800 mb-2">Registrarse</h2>
                         
+                        <!-- Selector de rol -->
                         <div>
-                            <label class="block text-sm text-gray-600 mb-1">Nombre</label>
+                            <label class="block text-sm text-gray-600 mb-1">Tipo de cuenta*</label>
+                            <div class="role-selector">
+                                <label class="role-option" :class="{'active': selectedRole === 'comprador'}">
+                                    <input type="radio" v-model="selectedRole" value="comprador" checked>
+                                    Comprador
+                                </label>
+                                <label class="role-option" :class="{'active': selectedRole === 'vendedor'}">
+                                    <input type="radio" v-model="selectedRole" value="vendedor">
+                                    Vendedor
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Nombre*</label>
                             <input v-model="signupName" type="text" class="w-full px-3 py-2 border rounded-lg focus-accent text-sm" required>
                         </div>
                         
                         <div>
-                            <label class="block text-sm text-gray-600 mb-1">Email</label>
+                            <label class="block text-sm text-gray-600 mb-1">Email*</label>
                             <input v-model="signupEmail" type="email" class="w-full px-3 py-2 border rounded-lg focus-accent text-sm" required>
                         </div>
                         
                         <div>
-                            <label class="block text-sm text-gray-600 mb-1">Contraseña</label>
+                            <label class="block text-sm text-gray-600 mb-1">Contraseña* (mínimo 6 caracteres)</label>
                             <input v-model="signupPassword" type="password" class="w-full px-3 py-2 border rounded-lg focus-accent text-sm" required>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">Tipo de Usuario</label>
-                            <select v-model="signupRole" class="w-full px-3 py-2 border rounded-lg focus-accent text-sm">
-                                <option value="comprador">Comprador</option>
-                                <option value="vendedor">Vendedor</option>
-                            </select>
                         </div>
                         
                         <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-medium text-sm hover:bg-opacity-90 transition-all">
@@ -334,36 +403,6 @@
                             <a href="#" @click="toggleAuthForm" class="text-accent hover:underline">Inicia sesión aquí</a>
                         </div>
                     </form>
-                    
-                    <!-- Verificación de Email -->
-                    <div v-else class="space-y-4">
-                        <h2 class="text-xl font-light text-gray-800 mb-2">Verifica tu email</h2>
-                        <p class="text-sm text-gray-600">
-                            Hemos enviado un código a <strong>{{ signupEmail }}</strong>.
-                            Por favor ingrésalo a continuación:
-                        </p>
-                        
-                        <form @submit.prevent="verifyCode">
-                            <div class="mb-3">
-                                <label class="block text-sm text-gray-600 mb-1">Código de Verificación</label>
-                                <input v-model="verificationCode" type="text" maxlength="6" 
-                                       class="w-full px-3 py-2 border rounded-lg focus-accent text-center text-lg tracking-widest" required>
-                            </div>
-                            
-                            <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-medium text-sm hover:bg-opacity-90 transition-all mb-3">
-                                Verificar
-                            </button>
-                            
-                            <div class="flex justify-center space-x-4 text-sm">
-                                <button type="button" @click="resendVerificationCode" class="text-accent hover:underline">
-                                    Reenviar código
-                                </button>
-                                <button type="button" @click="cancelVerification" class="text-gray-500 hover:underline">
-                                    Cambiar email
-                                </button>
-                            </div>
-                        </form>
-                    </div>
                 </div>
             </div>
         </div>
@@ -383,7 +422,6 @@
                            currentView === 'products' ? 'Inventario' : 
                            currentView === 'add-product' ? 'Nuevo Producto' : 
                            currentView === 'categories' ? 'Categorías' : 
-                           currentView === 'clients' ? 'Clientes' : 
                            currentView === 'users' ? 'Usuarios' :
                            currentView === 'edit-user' ? 'Editar Usuario' :
                            currentView === 'reports-sales' ? 'Reportes' : 
@@ -477,11 +515,6 @@
                                 <p class="text-2xl font-light text-accent">{{ todaySalesCount }}</p>
                             </div>
                             
-                            <div v-if="userRole === 'vendedor'" class="bg-gray-50 p-4 rounded-lg">
-                                <p class="text-sm text-gray-600">Clientes</p>
-                                <p class="text-2xl font-light text-accent">{{ clientsCount }}</p>
-                            </div>
-                            
                             <div v-if="userRole === 'comprador'" class="bg-gray-50 p-4 rounded-lg">
                                 <p class="text-sm text-gray-600">Carrito</p>
                                 <p class="text-2xl font-light text-accent">{{ Object.keys(cart).length }}</p>
@@ -505,7 +538,10 @@
                                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
                                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
                                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Dirección</th>
                                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
@@ -513,7 +549,29 @@
                                         <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{{ formatDate(sale.date) }}</td>
                                         <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{{ sale.id.substring(0, 6) }}</td>
                                         <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{{ sale.buyerName }}</td>
+                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">
+                                            <div>{{ sale.shipping?.address || 'N/A' }}</div>
+                                            <div class="text-xs text-gray-500">{{ sale.shipping?.city || '' }}, {{ sale.shipping?.state || '' }}</div>
+                                        </td>
                                         <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-accent">${{ sale.total.toFixed(2) }}</td>
+                                        <td class="px-4 py-2 whitespace-nowrap text-sm">
+                                            <span class="badge" :class="{
+                                                'badge-success': sale.status === 'completed',
+                                                'badge-warning': sale.status === 'pending',
+                                                'badge-danger': sale.status === 'cancelled'
+                                            }">
+                                                {{ sale.status === 'completed' ? 'Completado' : 
+                                                   sale.status === 'pending' ? 'Pendiente' : 'Cancelado' }}
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600" v-if="sale.status === 'pending'">
+                                            <button @click="completeOrder(sale.id)" class="text-accent hover:text-accent-dark">
+                                                <i class="fas fa-check-circle"></i> Completar
+                                            </button>
+                                        </td>
+                                        <td v-else class="px-4 py-2 whitespace-nowrap text-sm text-gray-400">
+                                            Completado
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -646,9 +704,11 @@
                                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
                                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
                                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Dirección</th>
                                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Productos</th>
                                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
                                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
@@ -656,6 +716,10 @@
                                         <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{{ formatDate(sale.date) }}</td>
                                         <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{{ sale.id.substring(0, 6) }}</td>
                                         <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{{ sale.buyerName }}</td>
+                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">
+                                            <div>{{ sale.shipping?.address || 'N/A' }}</div>
+                                            <div class="text-xs text-gray-500">{{ sale.shipping?.city || '' }}, {{ sale.shipping?.state || '' }}</div>
+                                        </td>
                                         <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">
                                             <span v-for="(item, index) in Object.values(sale.items).slice(0, 2)" :key="index">
                                                 {{ item.name }} ({{ item.quantity }}),
@@ -672,6 +736,14 @@
                                                 {{ sale.status === 'completed' ? 'Completado' : 
                                                    sale.status === 'pending' ? 'Pendiente' : 'Cancelado' }}
                                             </span>
+                                        </td>
+                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600" v-if="sale.status === 'pending'">
+                                            <button @click="completeOrder(sale.id)" class="text-accent hover:text-accent-dark">
+                                                <i class="fas fa-check-circle"></i> Completar
+                                            </button>
+                                        </td>
+                                        <td v-else class="px-4 py-2 whitespace-nowrap text-sm text-gray-400">
+                                            Completado
                                         </td>
                                     </tr>
                                 </tbody>
@@ -848,68 +920,6 @@
                             </button>
                         </div>
                     </form>
-                </div>
-                
-                <!-- Clientes -->
-                <div v-if="currentView === 'clients' && userRole === 'vendedor'">
-                    <div class="bg-white rounded-lg p-4 card-shadow">
-                        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-3">
-                            <h2 class="text-lg font-light text-gray-800">Gestión de Clientes</h2>
-                            
-                            <div class="flex flex-col sm:flex-row gap-2">
-                                <div class="relative flex-1">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i class="fas fa-search text-gray-400"></i>
-                                    </div>
-                                    <input v-model="clientsSearchQuery" @input="filterClients" type="text" 
-                                           class="pl-10 pr-3 py-2 w-full border rounded-lg focus-accent text-sm" 
-                                           placeholder="Buscar clientes...">
-                                </div>
-                                
-                                <button @click="exportClients" 
-                                        class="px-3 py-2 border border-gray-300 rounded-lg text-sm flex items-center justify-center">
-                                    <i class="fas fa-file-export mr-1"></i> Exportar
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead>
-                                    <tr>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Compras</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Total Gastado</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Última Compra</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-200">
-                                    <tr v-for="client in filteredClientsList" :key="client.id" class="hover:bg-gray-50">
-                                        <td class="px-4 py-2 whitespace-nowrap">
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0 h-10 w-10">
-                                                    <img class="h-10 w-10 rounded-full object-cover" :src="client.photoURL || 'https://randomuser.me/api/portraits/men/1.jpg'" :alt="client.name">
-                                                </div>
-                                                <div class="ml-4">
-                                                    <div class="text-sm font-medium text-gray-900">{{ client.name }}</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{{ client.email }}</td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{{ client.purchases || 0 }}</td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-accent">${{ (client.totalSpent || 0).toFixed(2) }}</td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">
-                                            {{ client.lastPurchase ? formatDate(client.lastPurchase) : 'Nunca' }}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div v-if="filteredClientsList.length === 0" class="text-center py-4 text-gray-500">
-                                No hay clientes registrados
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 
                 <!-- Usuarios -->
@@ -1117,7 +1127,7 @@
                             
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <p class="text-sm text-gray-600">Clientes Registrados</p>
-                                <p class="text-2xl font-light text-accent">{{ clientsCount }}</p>
+                                <p class="text-2xl font-light text-accent">{{ users.filter(u => u.role === 'comprador').length }}</p>
                             </div>
                         </div>
                         
@@ -1519,16 +1529,17 @@
                 currentUser: null,
                 userRole: '',
                 userName: '',
+                userEmail: '',
                 userPhoto: null,
-                userAddress: '',
-                userPhone: '',
                 showLogin: true,
+                showForgotPasswordForm: false,
                 loginEmail: '',
                 loginPassword: '',
+                resetEmail: '',
                 signupName: '',
                 signupEmail: '',
                 signupPassword: '',
-                signupRole: 'comprador',
+                selectedRole: 'comprador',
                 showVerification: false,
                 verificationCode: '',
                 pendingVerificationId: null,
@@ -1546,9 +1557,6 @@
                 filteredSales: [],
                 salesSearchQuery: '',
                 salesFilter: 'all',
-                clients: [],
-                filteredClients: [],
-                clientsSearchQuery: '',
                 showSidebar: false,
                 showShippingForm: false,
                 showNotificationsDropdown: false,
@@ -1559,7 +1567,8 @@
                     zipCode: '',
                     phone: '',
                     notes: '',
-                    paymentMethod: ''
+                    paymentMethod: '',
+                    cardNumber: ''
                 },
                 
                 // Notificaciones
@@ -1569,6 +1578,12 @@
                 
                 // Perfil
                 showProfileModal: false,
+                profileForm: {
+                    name: '',
+                    email: '',
+                    photoURL: '',
+                    newPassword: ''
+                },
                 profilePictureFile: null,
                 
                 // Gestión de productos
@@ -1583,6 +1598,7 @@
                 },
                 productsSearchQuery: '',
                 productsFilter: 'all',
+                filteredProductsList: [],
                 newCategory: '',
                 categoryError: '',
                 
@@ -1590,6 +1606,7 @@
                 users: [],
                 filteredUsers: [],
                 usersSearchQuery: '',
+                filteredUsersList: [],
                 editingUser: null,
                 userForm: {
                     name: '',
@@ -1606,7 +1623,6 @@
                 // Estadísticas
                 todaySalesCount: 0,
                 recentPurchasesCount: 0,
-                clientsCount: 0,
                 totalSalesCount: 0,
                 totalSalesAmount: 0,
                 totalInventoryValue: 0,
@@ -1628,69 +1644,17 @@
                 toastMessage: '',
                 toastType: 'success'
             },
-            computed: {
-                filteredProductsList() {
-                    let filtered = this.products;
-                    
-                    // Filtrar por búsqueda
-                    if (this.productsSearchQuery) {
-                        const query = this.productsSearchQuery.toLowerCase();
-                        filtered = filtered.filter(product => 
-                            product.name.toLowerCase().includes(query) || 
-                            product.description.toLowerCase().includes(query) ||
-                            product.category.toLowerCase().includes(query)
-                        );
-                    }
-                    
-                    // Filtrar por estado de stock
-                    if (this.productsFilter === 'lowStock') {
-                        filtered = filtered.filter(product => product.stock > 0 && product.stock <= 5);
-                    } else if (this.productsFilter === 'outOfStock') {
-                        filtered = filtered.filter(product => product.stock <= 0);
-                    }
-                    
-                    return filtered;
-                },
-                filteredClientsList() {
-                    let filtered = this.clients;
-                    
-                    if (this.clientsSearchQuery) {
-                        const query = this.clientsSearchQuery.toLowerCase();
-                        filtered = filtered.filter(client => 
-                            client.name.toLowerCase().includes(query) || 
-                            client.email.toLowerCase().includes(query)
-                        );
-                    }
-                    
-                    return filtered;
-                },
-                filteredUsersList() {
-                    let filtered = this.users;
-                    
-                    if (this.usersSearchQuery) {
-                        const query = this.usersSearchQuery.toLowerCase();
-                        filtered = filtered.filter(user => 
-                            user.name.toLowerCase().includes(query) || 
-                            user.email.toLowerCase().includes(query) ||
-                            user.role.toLowerCase().includes(query)
-                        );
-                    }
-                    
-                    return filtered;
-                }
-            },
             created() {
                 // Escuchar cambios de autenticación
                 auth.onAuthStateChanged(user => {
                     this.currentUser = user;
                     if (user) {
+                        this.userEmail = user.email;
                         this.loadUserData(user.uid);
                     } else {
                         this.userRole = '';
                         this.userName = '';
                         this.userPhoto = null;
-                        this.userAddress = '';
-                        this.userPhone = '';
                     }
                 });
                 
@@ -1717,10 +1681,42 @@
                 toggleAuthForm() {
                     this.showLogin = !this.showLogin;
                     this.showVerification = false;
+                    this.showForgotPasswordForm = false;
                     this.resetSignupForm();
                 },
                 
-                validateEmailBeforeSignup() {
+                showForgotPassword() {
+                    this.showLogin = false;
+                    this.showForgotPasswordForm = true;
+                    this.showVerification = false;
+                },
+                
+                sendPasswordReset() {
+                    if (!this.resetEmail) {
+                        this.showToastMessage('Error', 'Por favor ingresa tu correo electrónico', 'error');
+                        return;
+                    }
+
+                    auth.sendPasswordResetEmail(this.resetEmail)
+                        .then(() => {
+                            this.showToastMessage('Éxito', 'Se ha enviado un correo con instrucciones para restablecer tu contraseña');
+                            this.showForgotPasswordForm = false;
+                            this.showLogin = true;
+                            this.resetEmail = '';
+                        })
+                        .catch(error => {
+                            this.showToastMessage('Error', 'Error al enviar correo de recuperación: ' + error.message, 'error');
+                        });
+                },
+                
+                login() {
+                    auth.signInWithEmailAndPassword(this.loginEmail, this.loginPassword)
+                        .catch(error => {
+                            this.showToastMessage('Error', 'Error al iniciar sesión: ' + error.message, 'error');
+                        });
+                },
+                
+                signup() {
                     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                     if (!emailRegex.test(this.signupEmail)) {
                         this.showToastMessage('Error', 'Por favor ingrese un correo electrónico válido', 'error');
@@ -1732,112 +1728,32 @@
                         return;
                     }
                     
-                    this.signup();
-                },
-                
-                login() {
-                    auth.signInWithEmailAndPassword(this.loginEmail, this.loginPassword)
-                        .catch(error => {
-                            this.showToastMessage('Error', 'Error al iniciar sesión: ' + error.message, 'error');
-                        });
-                },
-                
-                signup() {
-                    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-                    
-                    const pendingVerificationRef = database.ref('pendingVerifications').push();
-                    pendingVerificationRef.set({
-                        name: this.signupName,
-                        email: this.signupEmail,
-                        password: this.signupPassword,
-                        role: this.signupRole,
-                        verificationCode: verificationCode,
-                        createdAt: firebase.database.ServerValue.TIMESTAMP
-                    }).then(() => {
-                        this.pendingVerificationId = pendingVerificationRef.key;
-                        this.showVerification = true;
-                        
-                        // En un entorno real, aquí enviarías el código por email
-                        console.log(`Código de verificación (demo): ${verificationCode}`);
-                        this.showToastMessage('Código enviado', `Código de verificación (demo): ${verificationCode}`);
-                    }).catch(error => {
-                        this.showToastMessage('Error', 'Error al registrar: ' + error.message, 'error');
-                    });
-                },
-                
-                verifyCode() {
-                    if (!this.pendingVerificationId) {
-                        this.showToastMessage('Error', 'No hay registro pendiente de verificación', 'error');
-                        return;
-                    }
-                    
-                    database.ref('pendingVerifications/' + this.pendingVerificationId).once('value').then(snapshot => {
-                        const pendingUser = snapshot.val();
-                        
-                        if (!pendingUser) {
-                            this.showToastMessage('Error', 'El registro pendiente ha expirado o no existe', 'error');
-                            this.cancelVerification();
-                            return;
-                        }
-                        
-                        if (pendingUser.verificationCode !== this.verificationCode) {
-                            this.showToastMessage('Error', 'Código de verificación incorrecto', 'error');
-                            return;
-                        }
-                        
-                        auth.createUserWithEmailAndPassword(pendingUser.email, pendingUser.password)
-                            .then(userCredential => {
-                                return database.ref('users/' + userCredential.user.uid).set({
-                                    name: pendingUser.name,
-                                    email: pendingUser.email,
-                                    role: pendingUser.role,
-                                    photoURL: null,
-                                    createdAt: firebase.database.ServerValue.TIMESTAMP,
-                                    emailVerified: true
-                                });
-                            })
-                            .then(() => {
-                                database.ref('pendingVerifications/' + this.pendingVerificationId).remove();
-                                this.resetSignupForm();
-                                this.showVerification = false;
-                                this.showLogin = true;
-                                this.showToastMessage('Éxito', '¡Registro completado con éxito! Ahora puedes iniciar sesión.');
-                            })
-                            .catch(error => {
-                                this.showToastMessage('Error', 'Error al completar el registro: ' + error.message, 'error');
+                    auth.createUserWithEmailAndPassword(this.signupEmail, this.signupPassword)
+                        .then(userCredential => {
+                            return database.ref('users/' + userCredential.user.uid).set({
+                                name: this.signupName,
+                                email: this.signupEmail,
+                                role: this.selectedRole,
+                                photoURL: null,
+                                createdAt: firebase.database.ServerValue.TIMESTAMP,
+                                emailVerified: false
                             });
-                    });
-                },
-                
-                resendVerificationCode() {
-                    if (!this.pendingVerificationId) return;
-                    
-                    const newVerificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-                    
-                    database.ref('pendingVerifications/' + this.pendingVerificationId).update({
-                        verificationCode: newVerificationCode,
-                        createdAt: firebase.database.ServerValue.TIMESTAMP
-                    }).then(() => {
-                        console.log(`Nuevo código de verificación (demo): ${newVerificationCode}`);
-                        this.showToastMessage('Código reenviado', `Nuevo código de verificación (demo): ${newVerificationCode}`);
-                    }).catch(error => {
-                        this.showToastMessage('Error', 'Error al reenviar el código: ' + error.message, 'error');
-                    });
-                },
-                
-                cancelVerification() {
-                    if (this.pendingVerificationId) {
-                        database.ref('pendingVerifications/' + this.pendingVerificationId).remove();
-                    }
-                    this.showVerification = false;
-                    this.resetSignupForm();
+                        })
+                        .then(() => {
+                            this.showToastMessage('Éxito', '¡Registro completado con éxito! Ahora puedes iniciar sesión.');
+                            this.resetSignupForm();
+                            this.showLogin = true;
+                        })
+                        .catch(error => {
+                            this.showToastMessage('Error', 'Error al registrarse: ' + error.message, 'error');
+                        });
                 },
                 
                 resetSignupForm() {
                     this.signupName = '';
                     this.signupEmail = '';
                     this.signupPassword = '';
-                    this.signupRole = 'comprador';
+                    this.selectedRole = 'comprador';
                     this.verificationCode = '';
                     this.pendingVerificationId = null;
                 },
@@ -1855,11 +1771,30 @@
                         const matchesSearch = product.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
                                              product.description.toLowerCase().includes(this.searchQuery.toLowerCase());
                         
-                        // Filtro por categorías (ahora permite múltiples selecciones)
                         const matchesCategories = this.selectedCategories.length === 0 || 
                                                 (product.category && this.selectedCategories.includes(product.category));
                         
                         return matchesSearch && matchesCategories;
+                    });
+                    
+                    // Actualizar también la lista filtrada para la vista de inventario
+                    this.filteredProductsList = this.products.filter(product => {
+                        if (this.productsSearchQuery) {
+                            const query = this.productsSearchQuery.toLowerCase();
+                            if (!product.name.toLowerCase().includes(query) && 
+                                !product.description.toLowerCase().includes(query) &&
+                                !product.category.toLowerCase().includes(query)) {
+                                return false;
+                            }
+                        }
+                        
+                        if (this.productsFilter === 'lowStock') {
+                            return product.stock > 0 && product.stock <= 5;
+                        } else if (this.productsFilter === 'outOfStock') {
+                            return product.stock <= 0;
+                        }
+                        
+                        return true;
                     });
                 },
                 
@@ -1896,7 +1831,6 @@
                     this.newCategory = '';
                     this.categoryError = '';
                     
-                    // Guardar en Firebase si es necesario
                     if (this.userRole === 'vendedor') {
                         this.saveCategories();
                     }
@@ -1910,7 +1844,6 @@
                     this.confirmationTitle = 'Eliminar categoría';
                     this.confirmationMessage = `¿Estás seguro de eliminar la categoría "${categoryToRemove}"? Los productos asociados perderán su categoría.`;
                     this.confirmationAction = () => {
-                        // Actualizar productos que usan esta categoría
                         this.products.forEach(product => {
                             if (product.category === categoryToRemove) {
                                 database.ref('products/' + product.id).update({
@@ -1921,12 +1854,10 @@
                         
                         this.categories.splice(index, 1);
                         
-                        // Guardar en Firebase si es necesario
                         if (this.userRole === 'vendedor') {
                             this.saveCategories();
                         }
                         
-                        // Eliminar de las categorías seleccionadas si está presente
                         const selectedIndex = this.selectedCategories.indexOf(categoryToRemove);
                         if (selectedIndex !== -1) {
                             this.selectedCategories.splice(selectedIndex, 1);
@@ -2006,10 +1937,7 @@
                             this.userRole = userData.role;
                             this.userName = userData.name;
                             this.userPhoto = userData.photoURL || null;
-                            this.userAddress = userData.address || '';
-                            this.userPhone = userData.phone || '';
                             
-                            // Configurar formulario de perfil
                             this.profileForm = {
                                 name: userData.name,
                                 email: userData.email,
@@ -2023,7 +1951,6 @@
                             
                             if (this.userRole === 'vendedor') {
                                 this.loadSales();
-                                this.loadClients();
                                 this.loadNotifications(userId);
                                 this.loadTodaySalesCount();
                                 this.loadReportsData();
@@ -2073,7 +2000,6 @@
                         return;
                     }
                     
-                    // Pedir cantidad al usuario
                     const quantity = prompt(`Ingrese la cantidad de "${product.name}" que desea (Stock disponible: ${product.stock})`, "1");
                     
                     if (!quantity || isNaN(quantity)) return;
@@ -2200,11 +2126,11 @@
                                 zipCode: '',
                                 phone: '',
                                 notes: '',
-                                paymentMethod: ''
+                                paymentMethod: '',
+                                cardNumber: ''
                             };
                             
                             this.sendNotificationToVendor(newSaleRef.key, saleData);
-                            this.updateClientPurchaseData(this.currentUser.uid, saleData.total);
                         })
                         .catch(error => {
                             this.showToastMessage('Error', 'Error al realizar la venta: ' + error.message, 'error');
@@ -2340,6 +2266,19 @@
                     this.filteredSales = filtered;
                 },
                 
+                completeOrder(orderId) {
+                    database.ref('sales/' + orderId).update({
+                        status: 'completed',
+                        completedAt: firebase.database.ServerValue.TIMESTAMP
+                    })
+                    .then(() => {
+                        this.showToastMessage('Éxito', 'Pedido marcado como completado');
+                    })
+                    .catch(error => {
+                        this.showToastMessage('Error', 'Error al completar pedido: ' + error.message, 'error');
+                    });
+                },
+                
                 loadTodaySalesCount() {
                     const today = new Date();
                     today.setHours(0, 0, 0, 0);
@@ -2348,51 +2287,6 @@
                     database.ref('sales').orderByChild('date').startAt(todayTimestamp).once('value', snapshot => {
                         this.todaySalesCount = snapshot.numChildren();
                     });
-                },
-                
-                // Clientes
-                loadClients() {
-                    if (this.userRole !== 'vendedor') return;
-                    
-                    database.ref('users').orderByChild('role').equalTo('comprador').on('value', snapshot => {
-                        this.clients = [];
-                        this.clientsCount = 0;
-                        
-                        snapshot.forEach(childSnapshot => {
-                            const client = childSnapshot.val();
-                            client.id = childSnapshot.key;
-                            this.clients.push(client);
-                            this.clientsCount++;
-                        });
-                    });
-                },
-                
-                updateClientPurchaseData(clientId, amount) {
-                    const updates = {};
-                    const clientRef = database.ref('users/' + clientId);
-                    
-                    clientRef.once('value').then(snapshot => {
-                        const client = snapshot.val();
-                        const purchases = (client.purchases || 0) + 1;
-                        const totalSpent = (client.totalSpent || 0) + amount;
-                        
-                        updates['purchases'] = purchases;
-                        updates['totalSpent'] = totalSpent;
-                        updates['lastPurchase'] = firebase.database.ServerValue.TIMESTAMP;
-                        
-                        clientRef.update(updates);
-                    });
-                },
-                
-                exportClients() {
-                    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.clients, null, 2));
-                    const downloadAnchorNode = document.createElement('a');
-                    downloadAnchorNode.setAttribute("href", dataStr);
-                    downloadAnchorNode.setAttribute("download", "clientes_pos.json");
-                    document.body.appendChild(downloadAnchorNode);
-                    downloadAnchorNode.click();
-                    downloadAnchorNode.remove();
-                    this.showToastMessage('Éxito', 'Clientes exportados correctamente');
                 },
                 
                 // Gestión de productos (vendedor)
@@ -2521,8 +2415,21 @@
                             user.id = childSnapshot.key;
                             this.users.push(user);
                         });
-                        this.filteredUsers = this.filteredUsersList;
+                        this.filteredUsersList = this.users;
                     });
+                },
+                
+                filterUsers() {
+                    if (this.usersSearchQuery) {
+                        const query = this.usersSearchQuery.toLowerCase();
+                        this.filteredUsersList = this.users.filter(user => 
+                            user.name.toLowerCase().includes(query) || 
+                            user.email.toLowerCase().includes(query) ||
+                            user.role.toLowerCase().includes(query)
+                        );
+                    } else {
+                        this.filteredUsersList = this.users;
+                    }
                 },
                 
                 editUser(user) {
@@ -2548,8 +2455,6 @@
                         photoURL: this.userForm.photoURL,
                         updatedAt: firebase.database.ServerValue.TIMESTAMP
                     };
-                    
-                    // No actualizamos el email directamente ya que requeriría autenticación
                     
                     database.ref('users/' + this.editingUser.id).update(updates)
                         .then(() => {
@@ -2656,7 +2561,6 @@
                             }
                         });
                         
-                        // En una aplicación real, aquí generarías un PDF o Excel
                         console.log('Reporte generado:', {
                             fechaInicio: this.reportsStartDate,
                             fechaFin: this.reportsEndDate,
@@ -2698,11 +2602,9 @@
                     const updates = {
                         name: this.profileForm.name,
                         photoURL: this.profileForm.photoURL,
-                        address: this.userAddress,
-                        phone: this.userPhone
+                        updatedAt: firebase.database.ServerValue.TIMESTAMP
                     };
                     
-                    // Actualizar contraseña si se proporcionó una nueva
                     if (this.profileForm.newPassword && this.profileForm.newPassword.length >= 6) {
                         auth.currentUser.updatePassword(this.profileForm.newPassword)
                             .then(() => {
@@ -2730,13 +2632,11 @@
                     return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                 },
                 
-                // Mostrar descripción completa
                 showDescriptionModal(description) {
                     this.currentDescription = description;
                     this.showDescription = true;
                 },
                 
-                // Mostrar notificación toast
                 showToastMessage(title, message, type = 'success') {
                     this.toastTitle = title;
                     this.toastMessage = message;
@@ -2748,7 +2648,6 @@
                     }, 5000);
                 },
                 
-                // Ejecutar acción de confirmación
                 executeConfirmationAction() {
                     if (this.confirmationAction) {
                         this.confirmationAction();
