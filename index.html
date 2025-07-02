@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POS Minimalista</title>
+    <title>POS Minimalista - Comprador</title>
     
     <!-- Hojas de estilo -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -18,12 +18,13 @@
         .transition-all { transition: all 0.3s ease; }
         .transition-transform { transition: transform 0.3s ease; }
         
-        /* Colores personalizados */
+        /* Colores personalizados - Cambiado a rojo perlado (#E57373) */
         .bg-primary { background-color: #f8fafc; }
         .bg-secondary { background-color: #ffffff; }
-        .bg-accent { background-color: #10b981; }
-        .text-accent { color: #10b981; }
-        .border-accent { border-color: #10b981; }
+        .bg-accent { background-color: #E57373; }
+        .text-accent { color: #E57373; }
+        .border-accent { border-color: #E57373; }
+        .hover\:bg-accent-dark:hover { background-color: #d32f2f; }
         
         /* Efectos hover */
         .hover-scale { transition: transform 0.2s ease; }
@@ -98,23 +99,9 @@
         /* Input focus */
         .focus-accent:focus {
             outline: none;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(229, 115, 115, 0.2);
+            border-color: #E57373;
         }
-        
-        /* Badges */
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.25rem 0.5rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-        
-        .badge-success { background-color: #d1fae5; color: #065f46; }
-        .badge-warning { background-color: #fef3c7; color: #92400e; }
-        .badge-danger { background-color: #fee2e2; color: #991b1b; }
         
         /* Scroll personalizado */
         .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -126,24 +113,6 @@
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
 
-        /* Formulario compacto */
-        .compact-form {
-            max-width: 459px;
-            margin: 30px;
-            padding: 1.5rem;
-        }
-        
-        .compact-form .form-group { margin-bottom: 0.75rem; }
-        
-        .compact-form input, 
-        .compact-form select, 
-        .compact-form textarea {
-            padding: 0.5rem 0.75rem;
-            font-size: 0.875rem;
-        }
-        
-        .compact-form button { padding: 0.5rem 1rem; }
-        
         /* Categorías */
         .category-pill {
             display: inline-flex;
@@ -160,7 +129,7 @@
         }
         
         .category-pill:hover { background-color: #cbd5e0; }
-        .category-pill.active { background-color: #10b981; color: white; }
+        .category-pill.active { background-color: #E57373; color: white; }
         
         .category-pill .remove-category {
             margin-left: 0.5rem;
@@ -170,51 +139,61 @@
         
         .category-pill .remove-category:hover { opacity: 1; }
 
-        /* Recuperación de contraseña */
-        .forgot-password-link {
-            color: #10b981;
-            text-decoration: none;
-            font-size: 0.875rem;
-        }
-
-        .forgot-password-link:hover {
-            text-decoration: underline;
-        }
-
-        .reset-form {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 1.5rem;
-        }
-
-        /* Selector de rol */
-        .role-selector {
+        /* Pestañas de autenticación */
+        .auth-tabs {
             display: flex;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.375rem;
-            overflow: hidden;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .auth-tab.active {
+            border-bottom-color: #E57373;
+            color: #E57373;
+            font-weight: 500;
+        }
+        
+        .auth-tab:hover:not(.active) {
+            background-color: #f8fafc;
+        }
+        
+        /* Vista de carga */
+        .loading-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .loading-spinner {
+            width: 3rem;
+            height: 3rem;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #E57373;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
             margin-bottom: 1rem;
         }
-
-        .role-option {
-            flex: 1;
-            padding: 0.5rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .role-option:hover {
-            background-color: #f1f5f9;
-        }
-
-        .role-option.active {
-            background-color: #10b981;
-            color: white;
-        }
-
-        .role-option input {
-            display: none;
+        /* Scroll infinito */
+        #product-grid {
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-bottom: 20px;
         }
 
         /* Media queries */
@@ -232,8 +211,8 @@
         <div class="sidebar" :class="{'sidebar-open': showSidebar}">
             <div class="p-4 border-b border-gray-200 flex items-center justify-between">
                 <h1 class="text-lg font-light text-gray-800 flex items-center">
-                    <i class="fas fa-cash-register text-accent mr-2"></i>
-                    POS Minimalista
+                    <i class="fas fa-shopping-bag text-accent mr-2"></i>
+                    Tienda Online
                 </h1>
                 <button @click="toggleSidebar" class="lg:hidden text-gray-500 hover:text-gray-700">
                     <i class="fas fa-times"></i>
@@ -252,43 +231,15 @@
                     <button @click="changeView('sales')" 
                             class="w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all"
                             :class="currentView === 'sales' ? 'bg-accent text-white' : 'text-gray-700 hover:bg-gray-100'">
-                        <i class="fas fa-shopping-bag mr-3"></i>
+                        <i class="fas fa-store mr-3"></i>
                         Productos
                     </button>
                     
-                    <button v-if="userRole === 'vendedor'" @click="changeView('history')" 
+                    <button @click="changeView('history')" 
                             class="w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all"
                             :class="currentView === 'history' ? 'bg-accent text-white' : 'text-gray-700 hover:bg-gray-100'">
                         <i class="fas fa-history mr-3"></i>
-                        Historial
-                    </button>
-                    
-                    <button v-if="userRole === 'vendedor'" @click="changeView('products')" 
-                            class="w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all"
-                            :class="currentView === 'products' ? 'bg-accent text-white' : 'text-gray-700 hover:bg-gray-100'">
-                        <i class="fas fa-boxes mr-3"></i>
-                        Inventario
-                    </button>
-                    
-                    <button v-if="userRole === 'vendedor'" @click="changeView('users')" 
-                            class="w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all"
-                            :class="currentView === 'users' ? 'bg-accent text-white' : 'text-gray-700 hover:bg-gray-100'">
-                        <i class="fas fa-user-cog mr-3"></i>
-                        Usuarios
-                    </button>
-                    
-                    <button v-if="userRole === 'vendedor'" @click="changeView('categories')" 
-                            class="w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all"
-                            :class="currentView === 'categories' ? 'bg-accent text-white' : 'text-gray-700 hover:bg-gray-100'">
-                        <i class="fas fa-tags mr-3"></i>
-                        Categorías
-                    </button>
-                    
-                    <button v-if="userRole === 'vendedor'" @click="changeView('reports-sales')" 
-                            class="w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all"
-                            :class="currentView === 'reports-sales' || currentView === 'reports-inventory' ? 'bg-accent text-white' : 'text-gray-700 hover:bg-gray-100'">
-                        <i class="fas fa-chart-line mr-3"></i>
-                        Reportes
+                        Mis Compras
                     </button>
                     
                     <div class="pt-4 mt-4 border-t border-gray-200">
@@ -309,100 +260,88 @@
         <div v-if="!currentUser" class="min-h-screen flex items-center justify-center p-4">
             <div class="bg-white rounded-xl shadow-sm w-full max-w-md overflow-hidden">
                 <div class="bg-accent p-6 text-center text-white">
-                    <i class="fas fa-cash-register text-4xl mb-3"></i>
-                    <h1 class="text-2xl font-light">POS Minimalista</h1>
+                    <i class="fas fa-shopping-bag text-4xl mb-3"></i>
+                    <h1 class="text-2xl font-light">Tienda Online</h1>
                 </div>
                 
-                <div class="p-6">
-                    <!-- Formulario de Login -->
-                    <form v-if="showLogin && !showForgotPasswordForm" @submit.prevent="login" class="space-y-4">
-                        <h2 class="text-xl font-light text-gray-800 mb-2">Iniciar Sesión</h2>
-                        
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">Email</label>
-                            <input v-model="loginEmail" type="email" class="w-full px-3 py-2 border rounded-lg focus-accent text-sm" required>
+                <div class="p-0">
+                    <!-- Pestañas de autenticación -->
+                    <div class="auth-tabs">
+                        <div class="auth-tab" :class="{'active': activeAuthTab === 'login'}" @click="activeAuthTab = 'login'">
+                            Iniciar Sesión
                         </div>
-                        
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">Contraseña</label>
-                            <input v-model="loginPassword" type="password" class="w-full px-3 py-2 border rounded-lg focus-accent text-sm" required>
-                        </div>
-                        
-                        <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-medium text-sm hover:bg-opacity-90 transition-all">
-                            Ingresar
-                        </button>
-                        
-                        <div class="text-center text-sm text-gray-500">
-                            ¿No tienes cuenta? 
-                            <a href="#" @click="toggleAuthForm" class="text-accent hover:underline">Regístrate aquí</a>
-                            <span class="mx-1">•</span>
-                            <a href="#" @click="showForgotPassword" class="text-accent hover:underline">¿Olvidaste tu contraseña?</a>
-                        </div>
-                    </form>
-                    
-                    <!-- Formulario de Recuperación de Contraseña -->
-                    <form v-if="showForgotPasswordForm" @submit.prevent="sendPasswordReset" class="space-y-4">
-                        <h2 class="text-xl font-light text-gray-800 mb-2">Recuperar Contraseña</h2>
-                        
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">Email</label>
-                            <input v-model="resetEmail" type="email" class="w-full px-3 py-2 border rounded-lg focus-accent text-sm" required>
-                        </div>
-                        
-                        <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-medium text-sm hover:bg-opacity-90 transition-all">
-                            Enviar Instrucciones
-                        </button>
-                        
-                        <div class="text-center text-sm text-gray-500">
-                            <a href="#" @click="showForgotPasswordForm = false" class="text-accent hover:underline">
-                                Volver al inicio de sesión
-                            </a>
-                        </div>
-                    </form>
-                    
-                    <!-- Formulario de Registro -->
-                    <form v-else-if="!showVerification" @submit.prevent="signup" class="space-y-4">
-                        <h2 class="text-xl font-light text-gray-800 mb-2">Registrarse</h2>
-                        
-                        <!-- Selector de rol -->
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">Tipo de cuenta*</label>
-                            <div class="role-selector">
-                                <label class="role-option" :class="{'active': selectedRole === 'comprador'}">
-                                    <input type="radio" v-model="selectedRole" value="comprador" checked>
-                                    Comprador
-                                </label>
-                                <label class="role-option" :class="{'active': selectedRole === 'vendedor'}">
-                                    <input type="radio" v-model="selectedRole" value="vendedor">
-                                    Vendedor
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">Nombre*</label>
-                            <input v-model="signupName" type="text" class="w-full px-3 py-2 border rounded-lg focus-accent text-sm" required>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">Email*</label>
-                            <input v-model="signupEmail" type="email" class="w-full px-3 py-2 border rounded-lg focus-accent text-sm" required>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm text-gray-600 mb-1">Contraseña* (mínimo 6 caracteres)</label>
-                            <input v-model="signupPassword" type="password" class="w-full px-3 py-2 border rounded-lg focus-accent text-sm" required>
-                        </div>
-                        
-                        <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-medium text-sm hover:bg-opacity-90 transition-all">
+                        <div class="auth-tab" :class="{'active': activeAuthTab === 'signup'}" @click="activeAuthTab = 'signup'">
                             Registrarse
-                        </button>
-                        
-                        <div class="text-center text-sm text-gray-500">
-                            ¿Ya tienes cuenta? 
-                            <a href="#" @click="toggleAuthForm" class="text-accent hover:underline">Inicia sesión aquí</a>
                         </div>
-                    </form>
+                    </div>
+                    
+                    <!-- Contenido de las pestañas -->
+                    <div class="p-6">
+                        <!-- Formulario de Login -->
+                        <form v-if="activeAuthTab === 'login' && !showForgotPasswordForm" @submit.prevent="login" class="space-y-4">
+                            <div>
+                                <label class="block text-sm text-gray-600 mb-1">Email</label>
+                                <input v-model="loginEmail" type="email" class="w-full px-3 py-2 border rounded-lg focus-accent text-sm" required>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm text-gray-600 mb-1">Contraseña</label>
+                                <input v-model="loginPassword" type="password" class="w-full px-3 py-2 border rounded-lg focus-accent text-sm" required>
+                            </div>
+                            
+                            <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-medium text-sm hover:bg-accent-dark transition-all">
+                                Ingresar
+                            </button>
+                            
+                            <div class="text-center text-sm text-gray-500">
+                                <a href="#" @click="showForgotPassword" class="text-accent hover:underline">¿Olvidaste tu contraseña?</a>
+                            </div>
+                        </form>
+                        
+                        <!-- Formulario de Recuperación de Contraseña -->
+                        <form v-if="showForgotPasswordForm" @submit.prevent="sendPasswordReset" class="space-y-4">
+                            <h2 class="text-xl font-light text-gray-800 mb-2">Recuperar Contraseña</h2>
+                            
+                            <div>
+                                <label class="block text-sm text-gray-600 mb-1">Email</label>
+                                <input v-model="resetEmail" type="email" class="w-full px-3 py-2 border rounded-lg focus-accent text-sm" required>
+                            </div>
+                            
+                            <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-medium text-sm hover:bg-accent-dark transition-all">
+                                Enviar Instrucciones
+                            </button>
+                            
+                            <div class="text-center text-sm text-gray-500">
+                                <a href="#" @click="showForgotPasswordForm = false" class="text-accent hover:underline">
+                                    Volver al inicio de sesión
+                                </a>
+                            </div>
+                        </form>
+                        
+                        <!-- Formulario de Registro -->
+                        <form v-if="activeAuthTab === 'signup' && !showVerification" @submit.prevent="signup" class="space-y-4">
+                            <div>
+                                <label class="block text-sm text-gray-600 mb-1">Nombre*</label>
+                                <input v-model="signupName" type="text" class="w-full px-3 py-2 border rounded-lg focus-accent text-sm" required>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm text-gray-600 mb-1">Email*</label>
+                                <input v-model="signupEmail" type="email" class="w-full px-3 py-2 border rounded-lg focus-accent text-sm" required>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm text-gray-600 mb-1">Contraseña* (mínimo 6 caracteres)</label>
+                                <input v-model="signupPassword" type="password" class="w-full px-3 py-2 border rounded-lg focus-accent text-sm" required>
+                            </div>
+                            
+                            <input type="hidden" v-model="selectedRole" value="comprador">
+                            
+                            <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg font-medium text-sm hover:bg-accent-dark transition-all">
+                                Registrarse
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -418,14 +357,7 @@
                     <h1 class="text-lg font-light text-gray-800">
                         {{ currentView === 'dashboard' ? 'Inicio' : 
                            currentView === 'sales' ? 'Productos' : 
-                           currentView === 'history' ? 'Historial' : 
-                           currentView === 'products' ? 'Inventario' : 
-                           currentView === 'add-product' ? 'Nuevo Producto' : 
-                           currentView === 'categories' ? 'Categorías' : 
-                           currentView === 'users' ? 'Usuarios' :
-                           currentView === 'edit-user' ? 'Editar Usuario' :
-                           currentView === 'reports-sales' ? 'Reportes' : 
-                           currentView === 'reports-inventory' ? 'Inventario' : '' }}
+                           currentView === 'history' ? 'Mis Compras' : '' }}
                     </h1>
                 </div>
                 
@@ -440,8 +372,8 @@
                         </button>
                     </div>
                     
-                    <!-- Notificaciones (solo vendedor) -->
-                    <div v-if="userRole === 'vendedor'" class="relative">
+                    <!-- Notificaciones -->
+                    <div class="relative">
                         <button @click="toggleNotifications" class="text-gray-500 hover:text-gray-700 relative">
                             <i class="fas fa-bell text-xl"></i>
                             <span v-if="unreadNotifications.length > 0" class="notification-badge">
@@ -462,8 +394,7 @@
                                     <div class="flex items-start">
                                         <div class="flex-shrink-0 pt-1 text-accent">
                                             <i :class="{
-                                                'fa-shopping-cart': notification.type === 'new_order',
-                                                'fa-exclamation-circle text-red-500': notification.type === 'alert',
+                                                'fa-shopping-cart': notification.type === 'order_update',
                                                 'fa-box text-blue-500': notification.type === 'new_product'
                                             }" class="fas"></i>
                                         </div>
@@ -502,129 +433,26 @@
                 <div v-if="currentView === 'dashboard'" class="space-y-4">
                     <div class="bg-white rounded-lg p-4 card-shadow">
                         <h2 class="text-lg font-light text-gray-800 mb-3">Bienvenido, {{ userName }}</h2>
-                        <p class="text-sm text-gray-600 mb-4">Rol: {{ userRole === 'vendedor' ? 'Vendedor' : 'Comprador' }}</p>
                         
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div v-if="userRole === 'vendedor'" class="bg-gray-50 p-4 rounded-lg">
-                                <p class="text-sm text-gray-600">Productos</p>
-                                <p class="text-2xl font-light text-accent">{{ products.length }}</p>
-                            </div>
-                            
-                            <div v-if="userRole === 'vendedor'" class="bg-gray-50 p-4 rounded-lg">
-                                <p class="text-sm text-gray-600">Ventas hoy</p>
-                                <p class="text-2xl font-light text-accent">{{ todaySalesCount }}</p>
-                            </div>
-                            
-                            <div v-if="userRole === 'comprador'" class="bg-gray-50 p-4 rounded-lg">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-gray-50 p-4 rounded-lg">
                                 <p class="text-sm text-gray-600">Carrito</p>
                                 <p class="text-2xl font-light text-accent">{{ Object.keys(cart).length }}</p>
                             </div>
                             
-                            <div v-if="userRole === 'comprador'" class="bg-gray-50 p-4 rounded-lg">
+                            <div class="bg-gray-50 p-4 rounded-lg">
                                 <p class="text-sm text-gray-600">Compras</p>
                                 <p class="text-2xl font-light text-accent">{{ recentPurchasesCount }}</p>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Ventas recientes (solo vendedor) -->
-                    <div v-if="userRole === 'vendedor' && sales.length > 0" class="bg-white rounded-lg p-4 card-shadow">
-                        <h2 class="text-lg font-light text-gray-800 mb-3">Ventas Recientes</h2>
-                        
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead>
-                                    <tr>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Dirección</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-200">
-                                    <tr v-for="sale in sales.slice(0, 5)" :key="sale.id" class="hover:bg-gray-50">
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{{ formatDate(sale.date) }}</td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{{ sale.id.substring(0, 6) }}</td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{{ sale.buyerName }}</td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">
-                                            <div>{{ sale.shipping?.address || 'N/A' }}</div>
-                                            <div class="text-xs text-gray-500">{{ sale.shipping?.city || '' }}, {{ sale.shipping?.state || '' }}</div>
-                                        </td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-accent">${{ sale.total.toFixed(2) }}</td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm">
-                                            <span class="badge" :class="{
-                                                'badge-success': sale.status === 'completed',
-                                                'badge-warning': sale.status === 'pending',
-                                                'badge-danger': sale.status === 'cancelled'
-                                            }">
-                                                {{ sale.status === 'completed' ? 'Completado' : 
-                                                   sale.status === 'pending' ? 'Pendiente' : 'Cancelado' }}
-                                            </span>
-                                        </td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600" v-if="sale.status === 'pending'">
-                                            <button @click="completeOrder(sale.id)" class="text-accent hover:text-accent-dark">
-                                                <i class="fas fa-check-circle"></i> Completar
-                                            </button>
-                                        </td>
-                                        <td v-else class="px-4 py-2 whitespace-nowrap text-sm text-gray-400">
-                                            Completado
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Productos -->
-                <div v-if="currentView === 'sales'">
-                    <div class="bg-white rounded-lg p-4 card-shadow">
-                        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-3">
-                            <h2 class="text-lg font-light text-gray-800">Productos Disponibles</h2>
-                            
-                            <div class="flex flex-col sm:flex-row gap-2">
-                                <div class="relative flex-1">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i class="fas fa-search text-gray-400"></i>
-                                    </div>
-                                    <input v-model="searchQuery" @input="filterProducts" type="text" 
-                                           class="pl-10 pr-3 py-2 w-full border rounded-lg focus-accent text-sm" 
-                                           placeholder="Buscar productos...">
-                                </div>
-                                
-                                <button v-if="userRole === 'vendedor'" @click="currentView = 'add-product'" 
-                                        class="px-3 py-2 bg-accent text-white rounded-lg text-sm flex items-center justify-center">
-                                    <i class="fas fa-plus mr-1"></i> Nuevo
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Filtro de categorías -->
-                        <div class="mb-4">
-                            <div class="flex flex-wrap items-center mb-2">
-                                <span class="text-sm text-gray-600 mr-2">Filtrar por categoría:</span>
-                                <span v-if="selectedCategories.length === 0" class="text-sm text-gray-400">Todas las categorías</span>
-                            </div>
-                            <div class="flex flex-wrap">
-                                <span v-for="category in categories" 
-                                      @click="toggleCategory(category)"
-                                      class="category-pill"
-                                      :class="{'active': selectedCategories.includes(category)}">
-                                    {{ category }}
-                                    <span v-if="selectedCategories.includes(category)" 
-                                          @click.stop="removeCategoryFromFilter(category)"
-                                          class="remove-category">
-                                        <i class="fas fa-times"></i>
-                                    </span>
-                                </span>
-                            </div>
-                        </div>
+                    <!-- Productos destacados -->
+                    <div v-if="products.length > 0" class="bg-white rounded-lg p-4 card-shadow">
+                        <h2 class="text-lg font-light text-gray-800 mb-3">Productos Destacados</h2>
                         
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            <div v-for="product in filteredProducts" :key="product.id" 
+                            <div v-for="product in products.slice(0, 4)" :key="product.id" 
                                  class="bg-white border border-gray-200 rounded-lg overflow-hidden hover-scale card-shadow">
                                 <div class="bg-gray-50 p-4 flex justify-center">
                                     <img :src="product.image || 'https://via.placeholder.com/150'" 
@@ -642,28 +470,10 @@
                                     </p>
                                     <div class="flex justify-between items-center mt-3">
                                         <span class="font-medium text-accent text-sm">${{ product.price.toFixed(2) }}</span>
-                                        <div class="flex items-center space-x-2">
-                                            <div v-if="userRole === 'vendedor'" class="flex space-x-1">
-                                                <button @click.stop="editProduct(product)" 
-                                                        class="text-gray-400 hover:text-accent p-1">
-                                                    <i class="fas fa-edit text-sm"></i>
-                                                </button>
-                                                <button @click.stop="confirmDeleteProduct(product.id)" 
-                                                        class="text-gray-400 hover:text-red-500 p-1">
-                                                    <i class="fas fa-trash text-sm"></i>
-                                                </button>
-                                            </div>
-                                            <div class="relative">
-                                                <button @click="addToCart(product.id)" 
-                                                        class="bg-accent text-white p-2 rounded-full hover:bg-opacity-90 transition-all">
-                                                    <i class="fas fa-plus text-xs"></i>
-                                                </button>
-                                                <span v-if="userRole === 'vendedor'" 
-                                                      class="absolute -top-1 -right-1 bg-white border border-accent text-accent rounded-full w-5 h-5 flex items-center justify-center text-xs">
-                                                    {{ product.stock }}
-                                                </span>
-                                            </div>
-                                        </div>
+                                        <button @click="addToCart(product.id)" 
+                                                class="bg-accent text-white p-2 rounded-full hover:bg-accent-dark transition-all">
+                                            <i class="fas fa-plus text-xs"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -671,11 +481,103 @@
                     </div>
                 </div>
                 
-                <!-- Historial de Ventas -->
-                <div v-if="currentView === 'history' && userRole === 'vendedor'">
+                <!-- Productos con scroll infinito -->
+                <div v-if="currentView === 'sales'">
                     <div class="bg-white rounded-lg p-4 card-shadow">
                         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-3">
-                            <h2 class="text-lg font-light text-gray-800">Historial de Ventas</h2>
+                            <h2 class="text-lg font-light text-gray-800">Productos Disponibles</h2>
+                            
+                            <div class="flex flex-col sm:flex-row gap-2">
+                                <div class="relative flex-1">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-search text-gray-400"></i>
+                                    </div>
+                                    <input v-model="searchQuery" @input="filterProducts" type="text" 
+                                           class="pl-10 pr-3 py-2 w-full border rounded-lg focus-accent text-sm" 
+                                           placeholder="Buscar productos...">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Filtro de categorías -->
+                        <div class="mb-4">
+                            <div class="flex flex-wrap items-center mb-2">
+                                <span class="text-sm text-gray-600 mr-2">Filtrar por categoría:</span>
+                                <span v-if="selectedCategories.length === 0" class="text-sm text-gray-400">Todas las categorías</span>
+                            </div>
+                            <div class="flex flex-wrap">
+                                <span v-for="category in categories" 
+                                      @click="toggleCategory(category)"
+                                      class="category-pill"
+                                      :class="{'active': selectedCategories.includes(category)}">
+                                    {{ category }}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- Vista de carga para productos -->
+                        <div v-if="loadingProducts" class="loading-view">
+                            <div class="loading-spinner"></div>
+                            <p class="text-gray-600">Cargando productos...</p>
+                        </div>
+                        
+                        <!-- Grid de productos con scroll infinito -->
+                        <div v-else 
+                             class="grid grid-cols-2 gap-4"
+                             id="product-grid"
+                             @scroll="handleScroll">
+                            <div v-for="product in visibleProducts" :key="product.id" 
+                                 class="bg-white border border-gray-200 rounded-lg overflow-hidden hover-scale card-shadow">
+                                <div class="bg-gray-50 p-4 flex justify-center">
+                                    <img :src="product.image || 'https://via.placeholder.com/150'" 
+                                         :alt="product.name" class="h-32 object-contain">
+                                </div>
+                                <div class="p-4">
+                                    <h3 class="font-medium text-gray-800 text-sm">{{ product.name }}</h3>
+                                    <p class="text-gray-500 text-xs mt-1">
+                                        {{ product.description ? (product.description.length > 30 ? product.description.substring(0, 30) + '...' : product.description) : 'Sin descripción' }}
+                                        <button v-if="product.description && product.description.length > 30" 
+                                                @click.stop="showDescriptionModal(product.description)"
+                                                class="text-accent text-xs hover:underline ml-1">
+                                            Ver más
+                                        </button>
+                                    </p>
+                                    <div class="flex justify-between items-center mt-3">
+                                        <span class="font-medium text-accent text-sm">${{ product.price.toFixed(2) }}</span>
+                                        <button @click="addToCart(product.id)" 
+                                                class="bg-accent text-white p-2 rounded-full hover:bg-accent-dark transition-all">
+                                            <i class="fas fa-plus text-xs"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Cargando más productos -->
+                        <div v-if="loadingMoreProducts" class="text-center py-4">
+                            <div class="loading-spinner"></div>
+                            <p class="text-gray-600 mt-2">Cargando más productos...</p>
+                        </div>
+                        
+                        <!-- Mensaje cuando no hay más productos -->
+                        <div v-if="allProductsLoaded && visibleProducts.length > 0" class="text-center py-4 text-gray-500">
+                            Has llegado al final de la lista
+                        </div>
+                        
+                        <!-- Mensaje cuando no hay productos que coincidan -->
+                        <div v-if="!loadingProducts && visibleProducts.length === 0" class="text-center py-16 text-gray-500">
+                            <i class="fas fa-search text-4xl mb-4 text-gray-300"></i>
+                            <p class="text-lg">No se encontraron productos</p>
+                            <p class="text-sm mt-2">Prueba con otros términos de búsqueda o categorías</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Historial de Compras -->
+                <div v-if="currentView === 'history'">
+                    <div class="bg-white rounded-lg p-4 card-shadow">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-3">
+                            <h2 class="text-lg font-light text-gray-800">Mis Compras</h2>
                             
                             <div class="flex flex-col sm:flex-row gap-2">
                                 <div class="relative flex-1">
@@ -684,16 +586,8 @@
                                     </div>
                                     <input v-model="salesSearchQuery" @input="filterSales" type="text" 
                                            class="pl-10 pr-3 py-2 w-full border rounded-lg focus-accent text-sm" 
-                                           placeholder="Buscar ventas...">
+                                           placeholder="Buscar mis compras...">
                                 </div>
-                                
-                                <select v-model="salesFilter" @change="filterSales" 
-                                        class="px-3 py-2 border rounded-lg focus-accent text-sm">
-                                    <option value="all">Todas</option>
-                                    <option value="today">Hoy</option>
-                                    <option value="week">Esta semana</option>
-                                    <option value="month">Este mes</option>
-                                </select>
                             </div>
                         </div>
                         
@@ -703,23 +597,15 @@
                                     <tr>
                                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
                                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Dirección</th>
                                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Productos</th>
                                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
                                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
                                     <tr v-for="sale in filteredSales" :key="sale.id" class="hover:bg-gray-50">
                                         <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{{ formatDate(sale.date) }}</td>
                                         <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{{ sale.id.substring(0, 6) }}</td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{{ sale.buyerName }}</td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">
-                                            <div>{{ sale.shipping?.address || 'N/A' }}</div>
-                                            <div class="text-xs text-gray-500">{{ sale.shipping?.city || '' }}, {{ sale.shipping?.state || '' }}</div>
-                                        </td>
                                         <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">
                                             <span v-for="(item, index) in Object.values(sale.items).slice(0, 2)" :key="index">
                                                 {{ item.name }} ({{ item.quantity }}),
@@ -728,477 +614,22 @@
                                         </td>
                                         <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-accent">${{ sale.total.toFixed(2) }}</td>
                                         <td class="px-4 py-2 whitespace-nowrap text-sm">
-                                            <span class="badge" :class="{
-                                                'badge-success': sale.status === 'completed',
-                                                'badge-warning': sale.status === 'pending',
-                                                'badge-danger': sale.status === 'cancelled'
-                                            }">
+                                            <span class="px-2 py-1 text-xs rounded-full" 
+                                                  :class="{
+                                                      'bg-green-100 text-green-800': sale.status === 'completed',
+                                                      'bg-yellow-100 text-yellow-800': sale.status === 'pending',
+                                                      'bg-red-100 text-red-800': sale.status === 'cancelled'
+                                                  }">
                                                 {{ sale.status === 'completed' ? 'Completado' : 
                                                    sale.status === 'pending' ? 'Pendiente' : 'Cancelado' }}
                                             </span>
-                                        </td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600" v-if="sale.status === 'pending'">
-                                            <button @click="completeOrder(sale.id)" class="text-accent hover:text-accent-dark">
-                                                <i class="fas fa-check-circle"></i> Completar
-                                            </button>
-                                        </td>
-                                        <td v-else class="px-4 py-2 whitespace-nowrap text-sm text-gray-400">
-                                            Completado
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                             <div v-if="filteredSales.length === 0" class="text-center py-4 text-gray-500">
-                                No hay ventas registradas
+                                No hay compras registradas
                             </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Inventario -->
-                <div v-if="currentView === 'products' && userRole === 'vendedor'">
-                    <div class="bg-white rounded-lg p-4 card-shadow">
-                        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-3">
-                            <h2 class="text-lg font-light text-gray-800">Gestión de Inventario</h2>
-                            
-                            <div class="flex flex-col sm:flex-row gap-2">
-                                <div class="relative flex-1">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i class="fas fa-search text-gray-400"></i>
-                                    </div>
-                                    <input v-model="productsSearchQuery" @input="filterProducts" type="text" 
-                                           class="pl-10 pr-3 py-2 w-full border rounded-lg focus-accent text-sm" 
-                                           placeholder="Buscar productos...">
-                                </div>
-                                
-                                <select v-model="productsFilter" @change="filterProducts" 
-                                        class="px-3 py-2 border rounded-lg focus-accent text-sm">
-                                    <option value="all">Todos</option>
-                                    <option value="lowStock">Stock bajo</option>
-                                    <option value="outOfStock">Sin stock</option>
-                                </select>
-                                
-                                <button @click="currentView = 'add-product'" 
-                                        class="px-3 py-2 bg-accent text-white rounded-lg text-sm flex items-center justify-center">
-                                    <i class="fas fa-plus mr-1"></i> Nuevo
-                                </button>
-                                
-                                <button @click="exportProducts" 
-                                        class="px-3 py-2 border border-gray-300 rounded-lg text-sm flex items-center justify-center">
-                                    <i class="fas fa-file-export mr-1"></i> Exportar
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead>
-                                    <tr>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Producto</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Categoría</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Precio</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Stock</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Ventas</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-200">
-                                    <tr v-for="product in filteredProductsList" :key="product.id" class="hover:bg-gray-50">
-                                        <td class="px-4 py-2 whitespace-nowrap">
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0 h-10 w-10">
-                                                    <img class="h-10 w-10 rounded-sm object-cover" :src="product.image || 'https://via.placeholder.com/40'" :alt="product.name">
-                                                </div>
-                                                <div class="ml-4">
-                                                    <div class="text-sm font-medium text-gray-900">{{ product.name }}</div>
-                                                    <div class="text-xs text-gray-500">{{ product.description ? product.description.substring(0, 30) + (product.description.length > 30 ? '...' : '') : 'Sin descripción' }}</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">
-                                            <span v-if="product.category" class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">
-                                                {{ product.category }}
-                                            </span>
-                                            <span v-else class="text-gray-400 text-xs">Sin categoría</span>
-                                        </td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-accent">${{ product.price.toFixed(2) }}</td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">
-                                            <span :class="{
-                                                'text-green-600 font-medium': product.stock > 10,
-                                                'text-yellow-600 font-medium': product.stock > 0 && product.stock <= 10,
-                                                'text-red-600 font-medium': product.stock <= 0
-                                            }">
-                                                {{ product.stock }}
-                                            </span>
-                                        </td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{{ product.sales || 0 }}</td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">
-                                            <button @click="editProduct(product)" class="text-accent hover:text-accent-dark mr-2">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button @click="confirmDeleteProduct(product.id)" class="text-red-500 hover:text-red-700">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div v-if="filteredProductsList.length === 0" class="text-center py-4 text-gray-500">
-                                No hay productos registrados
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Agregar/Editar Producto -->
-                <div v-if="currentView === 'add-product' || currentView === 'edit-product'" class="bg-white rounded-lg p-4 card-shadow">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-lg font-light text-gray-800">
-                            {{ editingProduct ? 'Editar Producto' : 'Agregar Nuevo Producto' }}
-                        </h2>
-                        <button @click="cancelEdit" class="text-gray-500 hover:text-gray-700">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    
-                    <form @submit.prevent="saveProduct" class="space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del Producto*</label>
-                                <input v-model="productForm.name" type="text" required 
-                                       class="w-full px-3 py-2 border rounded-lg focus-accent text-sm">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
-                                <select v-model="productForm.category" class="w-full px-3 py-2 border rounded-lg focus-accent text-sm">
-                                    <option value="">Seleccionar categoría</option>
-                                    <option v-for="category in categories" :value="category">{{ category }}</option>
-                                </select>
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Precio*</label>
-                                <input v-model="productForm.price" type="number" min="0" step="0.01" required 
-                                       class="w-full px-3 py-2 border rounded-lg focus-accent text-sm">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Stock*</label>
-                                <input v-model="productForm.stock" type="number" min="0" required 
-                                       class="w-full px-3 py-2 border rounded-lg focus-accent text-sm">
-                            </div>
-                            
-                            <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
-                                <textarea v-model="productForm.description" rows="3" 
-                                          class="w-full px-3 py-2 border rounded-lg focus-accent text-sm"></textarea>
-                            </div>
-                            
-                            <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Imagen del Producto</label>
-                                <input type="file" @change="handleProductImageUpload" 
-                                       class="w-full px-3 py-2 border rounded-lg focus-accent text-sm">
-                                <div v-if="productForm.image" class="mt-2">
-                                    <img :src="productForm.image" class="h-32 object-contain border rounded">
-                                    <button type="button" @click="productForm.image = ''" 
-                                            class="mt-2 text-xs text-red-500 hover:text-red-700">
-                                        <i class="fas fa-trash mr-1"></i> Eliminar imagen
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="flex justify-end space-x-3 pt-4">
-                            <button type="button" @click="cancelEdit" 
-                                    class="px-4 py-2 border border-gray-300 rounded-lg text-sm">
-                                Cancelar
-                            </button>
-                            <button type="submit" 
-                                    class="px-4 py-2 bg-accent text-white rounded-lg text-sm">
-                                {{ editingProduct ? 'Actualizar Producto' : 'Guardar Producto' }}
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                
-                <!-- Usuarios -->
-                <div v-if="currentView === 'users' && userRole === 'vendedor'">
-                    <div class="bg-white rounded-lg p-4 card-shadow">
-                        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-3">
-                            <h2 class="text-lg font-light text-gray-800">Gestión de Usuarios</h2>
-                            
-                            <div class="flex flex-col sm:flex-row gap-2">
-                                <div class="relative flex-1">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i class="fas fa-search text-gray-400"></i>
-                                    </div>
-                                    <input v-model="usersSearchQuery" @input="filterUsers" type="text" 
-                                           class="pl-10 pr-3 py-2 w-full border rounded-lg focus-accent text-sm" 
-                                           placeholder="Buscar usuarios...">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead>
-                                    <tr>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Usuario</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Rol</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Registro</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-200">
-                                    <tr v-for="user in filteredUsersList" :key="user.id" class="hover:bg-gray-50">
-                                        <td class="px-4 py-2 whitespace-nowrap">
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0 h-10 w-10">
-                                                    <img class="h-10 w-10 rounded-full object-cover" :src="user.photoURL || 'https://randomuser.me/api/portraits/men/1.jpg'" :alt="user.name">
-                                                </div>
-                                                <div class="ml-4">
-                                                    <div class="text-sm font-medium text-gray-900">{{ user.name }}</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{{ user.email }}</td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm">
-                                            <span class="px-2 py-1 text-xs rounded-full" 
-                                                  :class="user.role === 'vendedor' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
-                                                {{ user.role === 'vendedor' ? 'Vendedor' : 'Comprador' }}
-                                            </span>
-                                        </td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">
-                                            {{ formatDate(user.createdAt) }}
-                                        </td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">
-                                            <button @click="editUser(user)" class="text-accent hover:text-accent-dark mr-2">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button @click="confirmDeleteUser(user.id)" class="text-red-500 hover:text-red-700">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div v-if="filteredUsersList.length === 0" class="text-center py-4 text-gray-500">
-                                No hay usuarios registrados
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Editar Usuario -->
-                <div v-if="currentView === 'edit-user' && userRole === 'vendedor'">
-                    <div class="bg-white rounded-lg p-4 card-shadow">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-lg font-light text-gray-800">
-                                Editar Usuario: {{ editingUser.name }}
-                            </h2>
-                            <button @click="cancelUserEdit" class="text-gray-500 hover:text-gray-700">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        
-                        <form @submit.prevent="saveUser" class="space-y-4">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Nombre*</label>
-                                    <input v-model="userForm.name" type="text" required 
-                                           class="w-full px-3 py-2 border rounded-lg focus-accent text-sm">
-                                </div>
-                                
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Email*</label>
-                                    <input v-model="userForm.email" type="email" disabled
-                                           class="w-full px-3 py-2 border rounded-lg bg-gray-100 text-sm">
-                                </div>
-                                
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Rol*</label>
-                                    <select v-model="userForm.role" class="w-full px-3 py-2 border rounded-lg focus-accent text-sm">
-                                        <option value="comprador">Comprador</option>
-                                        <option value="vendedor">Vendedor</option>
-                                    </select>
-                                </div>
-                                
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Foto de Perfil (URL)</label>
-                                    <input v-model="userForm.photoURL" type="url" 
-                                           class="w-full px-3 py-2 border rounded-lg focus-accent text-sm">
-                                </div>
-                            </div>
-                            
-                            <div class="flex justify-end space-x-3 pt-4">
-                                <button type="button" @click="cancelUserEdit" 
-                                        class="px-4 py-2 border border-gray-300 rounded-lg text-sm">
-                                    Cancelar
-                                </button>
-                                <button type="submit" 
-                                        class="px-4 py-2 bg-accent text-white rounded-lg text-sm">
-                                    Actualizar Usuario
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                
-                <!-- Categorías -->
-                <div v-if="currentView === 'categories' && userRole === 'vendedor'">
-                    <div class="bg-white rounded-lg p-4 card-shadow">
-                        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-3">
-                            <h2 class="text-lg font-light text-gray-800">Gestión de Categorías</h2>
-                            
-                            <div class="flex flex-col sm:flex-row gap-2">
-                                <div class="relative flex-1">
-                                    <input v-model="newCategory" @keyup.enter="addCategory" type="text" 
-                                           class="w-full px-3 py-2 border rounded-lg focus-accent text-sm" 
-                                           placeholder="Nueva categoría">
-                                    <p v-if="categoryError" class="text-xs text-red-500 mt-1">{{ categoryError }}</p>
-                                </div>
-                                
-                                <button @click="addCategory" 
-                                        class="px-3 py-2 bg-accent text-white rounded-lg text-sm flex items-center justify-center">
-                                    <i class="fas fa-plus mr-1"></i> Agregar
-                                </button>
-                                
-                                <button @click="exportCategories" 
-                                        class="px-3 py-2 border border-gray-300 rounded-lg text-sm flex items-center justify-center">
-                                    <i class="fas fa-file-export mr-1"></i> Exportar
-                                </button>
-                                
-                                <button @click="importCategories" 
-                                        class="px-3 py-2 border border-gray-300 rounded-lg text-sm flex items-center justify-center">
-                                    <i class="fas fa-file-import mr-1"></i> Importar
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="flex flex-wrap">
-                            <div v-for="(category, index) in categories" :key="index" 
-                                 class="category-pill">
-                                {{ category }}
-                                <span @click="removeCategory(index)" class="remove-category">
-                                    <i class="fas fa-times"></i>
-                                </span>
-                            </div>
-                            <div v-if="categories.length === 0" class="text-gray-500 text-sm">
-                                No hay categorías registradas
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Reportes -->
-                <div v-if="currentView === 'reports-sales' && userRole === 'vendedor'">
-                    <div class="bg-white rounded-lg p-4 card-shadow">
-                        <h2 class="text-lg font-light text-gray-800 mb-4">Reportes de Ventas</h2>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                            <div class="bg-gray-50 p-4 rounded-lg">
-                                <p class="text-sm text-gray-600">Total de Ventas</p>
-                                <p class="text-2xl font-light text-accent">{{ totalSalesCount }}</p>
-                            </div>
-                            
-                            <div class="bg-gray-50 p-4 rounded-lg">
-                                <p class="text-sm text-gray-600">Monto Total</p>
-                                <p class="text-2xl font-light text-accent">${{ totalSalesAmount.toFixed(2) }}</p>
-                            </div>
-                            
-                            <div class="bg-gray-50 p-4 rounded-lg">
-                                <p class="text-sm text-gray-600">Valor del Inventario</p>
-                                <p class="text-2xl font-light text-accent">${{ totalInventoryValue.toFixed(2) }}</p>
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                            <div class="bg-gray-50 p-4 rounded-lg">
-                                <p class="text-sm text-gray-600">Productos con Stock Bajo</p>
-                                <p class="text-2xl font-light text-yellow-600">{{ lowStockCount }}</p>
-                            </div>
-                            
-                            <div class="bg-gray-50 p-4 rounded-lg">
-                                <p class="text-sm text-gray-600">Productos Agotados</p>
-                                <p class="text-2xl font-light text-red-600">{{ outOfStockCount }}</p>
-                            </div>
-                            
-                            <div class="bg-gray-50 p-4 rounded-lg">
-                                <p class="text-sm text-gray-600">Clientes Registrados</p>
-                                <p class="text-2xl font-light text-accent">{{ users.filter(u => u.role === 'comprador').length }}</p>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-6">
-                            <h3 class="text-md font-light text-gray-800 mb-3">Productos Más Vendidos</h3>
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead>
-                                        <tr>
-                                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Producto</th>
-                                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Ventas</th>
-                                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Stock</th>
-                                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Precio</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-gray-200">
-                                        <tr v-for="product in topSellingProducts" :key="product.id" class="hover:bg-gray-50">
-                                            <td class="px-4 py-2 whitespace-nowrap">
-                                                <div class="flex items-center">
-                                                    <div class="flex-shrink-0 h-10 w-10">
-                                                        <img class="h-10 w-10 rounded-sm object-cover" :src="product.image || 'https://via.placeholder.com/40'" :alt="product.name">
-                                                    </div>
-                                                    <div class="ml-4">
-                                                        <div class="text-sm font-medium text-gray-900">{{ product.name }}</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{{ product.sales || 0 }}</td>
-                                            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{{ product.stock }}</td>
-                                            <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-accent">${{ product.price.toFixed(2) }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div v-if="topSellingProducts.length === 0" class="text-center py-4 text-gray-500">
-                                    No hay datos de ventas disponibles
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <h3 class="text-md font-light text-gray-800 mb-3">Generar Reporte Personalizado</h3>
-                            <form @submit.prevent="generateSalesReport" class="space-y-4">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de Inicio</label>
-                                        <input v-model="reportsStartDate" type="date" required 
-                                               class="w-full px-3 py-2 border rounded-lg focus-accent text-sm">
-                                    </div>
-                                    
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de Fin</label>
-                                        <input v-model="reportsEndDate" type="date" required 
-                                               class="w-full px-3 py-2 border rounded-lg focus-accent text-sm">
-                                    </div>
-                                    
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
-                                        <select v-model="reportsCategory" class="w-full px-3 py-2 border rounded-lg focus-accent text-sm">
-                                            <option value="">Todas las categorías</option>
-                                            <option v-for="category in categories" :value="category">{{ category }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex justify-end">
-                                    <button type="submit" 
-                                            class="px-4 py-2 bg-accent text-white rounded-lg text-sm">
-                                        Generar Reporte
-                                    </button>
-                                </div>
-                            </form>
                         </div>
                     </div>
                 </div>
@@ -1288,8 +719,8 @@
                 </div>
                 
                 <div class="space-y-2">
-                    <button v-if="userRole === 'comprador'" @click="checkout" 
-                            class="w-full py-2 bg-accent text-white rounded-lg font-medium text-sm hover:bg-opacity-90 transition-all">
+                    <button @click="checkout" 
+                            class="w-full py-2 bg-accent text-white rounded-lg font-medium text-sm hover:bg-accent-dark transition-all">
                         Finalizar Compra
                     </button>
                     <button @click="clearCart" 
@@ -1320,13 +751,13 @@
                         
                         <div class="grid grid-cols-2 gap-3">
                             <div class="form-group">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Ciudad*</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">numero de casa o AP*</label>
                                 <input v-model="shippingData.city" type="text" 
                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-accent focus:border-accent text-sm" required>
                             </div>
                             
                             <div class="form-group">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Estado*</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">municipio*</label>
                                 <input v-model="shippingData.state" type="text" 
                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-accent focus:border-accent text-sm" required>
                             </div>
@@ -1357,7 +788,7 @@
                             <select v-model="shippingData.paymentMethod" 
                                     class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-accent focus:border-accent text-sm" required>
                                 <option value="cash">Efectivo</option>
-                                <option value="card">Tarjeta</option>
+                             
                                 <option value="transfer">Transferencia</option>
                             </select>
                         </div>
@@ -1374,7 +805,7 @@
                                 Cancelar
                             </button>
                             <button type="submit" 
-                                    class="px-4 py-2 bg-accent text-white rounded-md text-sm font-medium hover:bg-opacity-90">
+                                    class="px-4 py-2 bg-accent text-white rounded-md text-sm font-medium hover:bg-accent-dark">
                                 Confirmar Compra
                             </button>
                         </div>
@@ -1394,53 +825,50 @@
                         </button>
                     </div>
                     
-                    <div class="flex flex-col items-center mb-6">
-                        <img :src="userPhoto || 'https://randomuser.me/api/portraits/men/1.jpg'" 
-                             class="w-20 h-20 rounded-full object-cover border-2 border-accent mb-3">
-                        <h3 class="text-lg font-medium text-gray-800">{{ userName }}</h3>
+                    <div class="flex flex-col items-center mb-4">
+                        <div class="relative">
+                            <img :src="userPhoto || 'https://randomuser.me/api/portraits/men/1.jpg'" 
+                                 class="w-20 h-20 rounded-full object-cover border border-gray-200">
+                            <label for="profilePicture" class="absolute bottom-0 right-0 bg-white rounded-full p-1 border border-gray-200 cursor-pointer hover:bg-gray-100">
+                                <i class="fas fa-camera text-gray-600 text-xs"></i>
+                                <input id="profilePicture" type="file" accept="image/*" @change="handleFileUpload" class="hidden">
+                            </label>
+                        </div>
+                        <h3 class="mt-2 text-lg font-medium text-gray-800">{{ userName }}</h3>
                         <p class="text-sm text-gray-500">{{ userEmail }}</p>
-                        <span class="mt-1 px-2 py-1 text-xs rounded-full" 
-                              :class="userRole === 'vendedor' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
-                            {{ userRole === 'vendedor' ? 'Vendedor' : 'Comprador' }}
-                        </span>
                     </div>
                     
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-xs text-gray-600 mb-1">Nombre</label>
+                    <form @submit.prevent="updateProfile" class="space-y-3">
+                        <div class="form-group">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
                             <input v-model="profileForm.name" type="text" 
-                                   class="w-full px-3 py-2 border rounded-lg focus-accent text-sm">
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-accent focus:border-accent text-sm" required>
                         </div>
                         
-                        <div>
-                            <label class="block text-xs text-gray-600 mb-1">Email</label>
-                            <input v-model="profileForm.email" type="email" 
-                                   class="w-full px-3 py-2 border rounded-lg focus-accent text-sm">
+                        <div class="form-group">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input v-model="profileForm.email" type="email" disabled
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100 text-sm">
                         </div>
                         
-                        <div>
-                            <label class="block text-xs text-gray-600 mb-1">Foto de perfil (URL)</label>
-                            <input v-model="profileForm.photoURL" type="url" 
-                                   class="w-full px-3 py-2 border rounded-lg focus-accent text-sm">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-xs text-gray-600 mb-1">Nueva contraseña</label>
+                        <div class="form-group">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nueva Contraseña</label>
                             <input v-model="profileForm.newPassword" type="password" 
-                                   class="w-full px-3 py-2 border rounded-lg focus-accent text-sm" placeholder="Dejar vacío para no cambiar">
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-accent focus:border-accent text-sm"
+                                   placeholder="Dejar vacío para no cambiar">
                         </div>
-                    </div>
-                    
-                    <div class="flex justify-end space-x-3 pt-6">
-                        <button @click="showProfileModal = false" 
-                                class="px-4 py-2 border border-gray-300 rounded-lg text-sm">
-                            Cancelar
-                        </button>
-                        <button @click="updateProfile" 
-                                class="px-4 py-2 bg-accent text-white rounded-lg text-sm">
-                            Guardar Cambios
-                        </button>
-                    </div>
+                        
+                        <div class="flex justify-end space-x-3 pt-3">
+                            <button type="button" @click="showProfileModal = false" 
+                                    class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                Cancelar
+                            </button>
+                            <button type="submit" 
+                                    class="px-4 py-2 bg-accent text-white rounded-md text-sm font-medium hover:bg-accent-dark">
+                                Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -1502,7 +930,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-    
+
     <!-- Código de la aplicación -->
     <script>
         // Configuración de Firebase
@@ -1527,11 +955,11 @@
             data: {
                 // Autenticación
                 currentUser: null,
-                userRole: '',
+                userRole: 'comprador',
                 userName: '',
                 userEmail: '',
                 userPhoto: null,
-                showLogin: true,
+                activeAuthTab: 'login', // 'login' o 'signup'
                 showForgotPasswordForm: false,
                 loginEmail: '',
                 loginPassword: '',
@@ -1551,6 +979,12 @@
                 categories: [],
                 products: [],
                 filteredProducts: [],
+                visibleProducts: [], // Productos actualmente visibles
+                productsPerLoad: 8, // Cuántos productos cargar cada vez
+                currentProductIndex: 0, // Índice del último producto cargado
+                loadingProducts: true, // Estado de carga para productos
+                loadingMoreProducts: false, // Estado de carga para scroll infinito
+                allProductsLoaded: false, // Si ya se cargaron todos los productos
                 cart: {},
                 showCart: false,
                 sales: [],
@@ -1558,8 +992,10 @@
                 salesSearchQuery: '',
                 salesFilter: 'all',
                 showSidebar: false,
-                showShippingForm: false,
                 showNotificationsDropdown: false,
+                showShippingForm: false,
+                
+                // Datos de envío
                 shippingData: {
                     address: '',
                     city: '',
@@ -1567,7 +1003,7 @@
                     zipCode: '',
                     phone: '',
                     notes: '',
-                    paymentMethod: '',
+                    paymentMethod: 'cash',
                     cardNumber: ''
                 },
                 
@@ -1586,49 +1022,8 @@
                 },
                 profilePictureFile: null,
                 
-                // Gestión de productos
-                editingProduct: null,
-                productForm: {
-                    name: '',
-                    description: '',
-                    price: 0,
-                    stock: 0,
-                    category: '',
-                    image: ''
-                },
-                productsSearchQuery: '',
-                productsFilter: 'all',
-                filteredProductsList: [],
-                newCategory: '',
-                categoryError: '',
-                
-                // Gestión de usuarios
-                users: [],
-                filteredUsers: [],
-                usersSearchQuery: '',
-                filteredUsersList: [],
-                editingUser: null,
-                userForm: {
-                    name: '',
-                    email: '',
-                    role: 'comprador',
-                    photoURL: ''
-                },
-                
-                // Reportes
-                reportsStartDate: '',
-                reportsEndDate: '',
-                reportsCategory: '',
-                
                 // Estadísticas
-                todaySalesCount: 0,
                 recentPurchasesCount: 0,
-                totalSalesCount: 0,
-                totalSalesAmount: 0,
-                totalInventoryValue: 0,
-                lowStockCount: 0,
-                outOfStockCount: 0,
-                topSellingProducts: [],
                 
                 // Descripción de producto
                 showDescription: false,
@@ -1652,17 +1047,11 @@
                         this.userEmail = user.email;
                         this.loadUserData(user.uid);
                     } else {
-                        this.userRole = '';
+                        this.userRole = 'comprador';
                         this.userName = '';
                         this.userPhoto = null;
                     }
                 });
-                
-                // Configurar fechas para reportes
-                const today = new Date();
-                this.reportsEndDate = today.toISOString().split('T')[0];
-                today.setMonth(today.getMonth() - 1);
-                this.reportsStartDate = today.toISOString().split('T')[0];
             },
             methods: {
                 // Métodos de navegación
@@ -1678,17 +1067,9 @@
                 },
                 
                 // Métodos de autenticación
-                toggleAuthForm() {
-                    this.showLogin = !this.showLogin;
-                    this.showVerification = false;
-                    this.showForgotPasswordForm = false;
-                    this.resetSignupForm();
-                },
-                
                 showForgotPassword() {
-                    this.showLogin = false;
                     this.showForgotPasswordForm = true;
-                    this.showVerification = false;
+                    this.activeAuthTab = 'login';
                 },
                 
                 sendPasswordReset() {
@@ -1701,7 +1082,6 @@
                         .then(() => {
                             this.showToastMessage('Éxito', 'Se ha enviado un correo con instrucciones para restablecer tu contraseña');
                             this.showForgotPasswordForm = false;
-                            this.showLogin = true;
                             this.resetEmail = '';
                         })
                         .catch(error => {
@@ -1733,7 +1113,7 @@
                             return database.ref('users/' + userCredential.user.uid).set({
                                 name: this.signupName,
                                 email: this.signupEmail,
-                                role: this.selectedRole,
+                                role: 'comprador',
                                 photoURL: null,
                                 createdAt: firebase.database.ServerValue.TIMESTAMP,
                                 emailVerified: false
@@ -1742,7 +1122,7 @@
                         .then(() => {
                             this.showToastMessage('Éxito', '¡Registro completado con éxito! Ahora puedes iniciar sesión.');
                             this.resetSignupForm();
-                            this.showLogin = true;
+                            this.activeAuthTab = 'login';
                         })
                         .catch(error => {
                             this.showToastMessage('Error', 'Error al registrarse: ' + error.message, 'error');
@@ -1777,25 +1157,11 @@
                         return matchesSearch && matchesCategories;
                     });
                     
-                    // Actualizar también la lista filtrada para la vista de inventario
-                    this.filteredProductsList = this.products.filter(product => {
-                        if (this.productsSearchQuery) {
-                            const query = this.productsSearchQuery.toLowerCase();
-                            if (!product.name.toLowerCase().includes(query) && 
-                                !product.description.toLowerCase().includes(query) &&
-                                !product.category.toLowerCase().includes(query)) {
-                                return false;
-                            }
-                        }
-                        
-                        if (this.productsFilter === 'lowStock') {
-                            return product.stock > 0 && product.stock <= 5;
-                        } else if (this.productsFilter === 'outOfStock') {
-                            return product.stock <= 0;
-                        }
-                        
-                        return true;
-                    });
+                    // Resetear la carga infinita
+                    this.visibleProducts = [];
+                    this.currentProductIndex = 0;
+                    this.allProductsLoaded = false;
+                    this.loadMoreProducts();
                 },
                 
                 toggleCategory(category) {
@@ -1808,125 +1174,38 @@
                     this.filterProducts();
                 },
                 
-                removeCategoryFromFilter(category) {
-                    const index = this.selectedCategories.indexOf(category);
-                    if (index !== -1) {
-                        this.selectedCategories.splice(index, 1);
-                        this.filterProducts();
-                    }
-                },
-                
-                addCategory() {
-                    if (!this.newCategory.trim()) {
-                        this.categoryError = 'Por favor ingresa un nombre para la categoría';
-                        return;
-                    }
+                // Método para cargar más productos
+                loadMoreProducts() {
+                    if (this.loadingMoreProducts || this.allProductsLoaded) return;
                     
-                    if (this.categories.includes(this.newCategory)) {
-                        this.categoryError = 'Esta categoría ya existe';
-                        return;
-                    }
+                    this.loadingMoreProducts = true;
                     
-                    this.categories.push(this.newCategory.trim());
-                    this.newCategory = '';
-                    this.categoryError = '';
-                    
-                    if (this.userRole === 'vendedor') {
-                        this.saveCategories();
-                    }
-                    
-                    this.showToastMessage('Éxito', 'Categoría agregada con éxito');
-                },
-                
-                removeCategory(index) {
-                    const categoryToRemove = this.categories[index];
-                    
-                    this.confirmationTitle = 'Eliminar categoría';
-                    this.confirmationMessage = `¿Estás seguro de eliminar la categoría "${categoryToRemove}"? Los productos asociados perderán su categoría.`;
-                    this.confirmationAction = () => {
-                        this.products.forEach(product => {
-                            if (product.category === categoryToRemove) {
-                                database.ref('products/' + product.id).update({
-                                    category: ''
-                                });
-                            }
-                        });
+                    // Simulamos una carga con setTimeout (en una app real sería una petición a la API)
+                    setTimeout(() => {
+                        const nextIndex = this.currentProductIndex + this.productsPerLoad;
+                        const newProducts = this.filteredProducts.slice(this.currentProductIndex, nextIndex);
                         
-                        this.categories.splice(index, 1);
+                        this.visibleProducts = [...this.visibleProducts, ...newProducts];
+                        this.currentProductIndex = nextIndex;
                         
-                        if (this.userRole === 'vendedor') {
-                            this.saveCategories();
+                        // Verificar si ya cargamos todos los productos
+                        if (this.currentProductIndex >= this.filteredProducts.length) {
+                            this.allProductsLoaded = true;
                         }
                         
-                        const selectedIndex = this.selectedCategories.indexOf(categoryToRemove);
-                        if (selectedIndex !== -1) {
-                            this.selectedCategories.splice(selectedIndex, 1);
-                        }
-                        
-                        this.showToastMessage('Éxito', 'Categoría eliminada con éxito');
-                    };
+                        this.loadingMoreProducts = false;
+                    }, 800);
+                },
+                
+                // Manejar el scroll para carga infinita
+                handleScroll(event) {
+                    const grid = event.target;
+                    const scrollBottom = grid.scrollHeight - grid.scrollTop - grid.clientHeight;
                     
-                    this.showConfirmationModal = true;
-                },
-                
-                saveCategories() {
-                    database.ref('categories').set(this.categories)
-                        .catch(error => {
-                            console.error('Error al guardar categorías:', error);
-                            this.showToastMessage('Error', 'Error al guardar categorías', 'error');
-                        });
-                },
-                
-                loadCategories() {
-                    database.ref('categories').on('value', snapshot => {
-                        this.categories = snapshot.val() || [];
-                    });
-                },
-                
-                exportCategories() {
-                    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.categories, null, 2));
-                    const downloadAnchorNode = document.createElement('a');
-                    downloadAnchorNode.setAttribute("href", dataStr);
-                    downloadAnchorNode.setAttribute("download", "categorias_pos.json");
-                    document.body.appendChild(downloadAnchorNode);
-                    downloadAnchorNode.click();
-                    downloadAnchorNode.remove();
-                    this.showToastMessage('Éxito', 'Categorías exportadas correctamente');
-                },
-                
-                importCategories() {
-                    const input = document.createElement('input');
-                    input.type = 'file';
-                    input.accept = '.json';
-                    
-                    input.onchange = e => {
-                        const file = e.target.files[0];
-                        const reader = new FileReader();
-                        
-                        reader.onload = event => {
-                            try {
-                                const importedCategories = JSON.parse(event.target.result);
-                                if (Array.isArray(importedCategories)) {
-                                    this.confirmationTitle = 'Importar categorías';
-                                    this.confirmationMessage = `¿Importar ${importedCategories.length} categorías? Se reemplazarán las actuales.`;
-                                    this.confirmationAction = () => {
-                                        this.categories = importedCategories;
-                                        this.saveCategories();
-                                        this.showToastMessage('Éxito', 'Categorías importadas con éxito');
-                                    };
-                                    this.showConfirmationModal = true;
-                                } else {
-                                    this.showToastMessage('Error', 'El archivo no contiene un formato válido de categorías', 'error');
-                                }
-                            } catch (error) {
-                                this.showToastMessage('Error', 'Error al leer el archivo: ' + error.message, 'error');
-                            }
-                        };
-                        
-                        reader.readAsText(file);
-                    };
-                    
-                    input.click();
+                    // Cargar más productos cuando el usuario esté cerca del final
+                    if (scrollBottom < 100) {
+                        this.loadMoreProducts();
+                    }
                 },
                 
                 // Cargar datos del usuario
@@ -1946,23 +1225,16 @@
                             };
                             
                             this.loadProducts();
-                            this.loadAllUsers();
+                            this.loadPurchases(userId);
                             this.loadCategories();
-                            
-                            if (this.userRole === 'vendedor') {
-                                this.loadSales();
-                                this.loadNotifications(userId);
-                                this.loadTodaySalesCount();
-                                this.loadReportsData();
-                            } else {
-                                this.recentPurchasesCount = 0;
-                            }
+                            this.loadNotifications(userId);
                         }
                     });
                 },
                 
                 // Productos
                 loadProducts() {
+                    this.loadingProducts = true;
                     database.ref('products').on('value', snapshot => {
                         this.products = [];
                         const categories = new Set();
@@ -1979,7 +1251,13 @@
                         
                         this.categories = Array.from(categories);
                         this.filterProducts();
-                        this.calculateInventoryStats();
+                        this.loadingProducts = false;
+                    });
+                },
+                
+                loadCategories() {
+                    database.ref('categories').on('value', snapshot => {
+                        this.categories = snapshot.val() || [];
                     });
                 },
                 
@@ -1995,7 +1273,7 @@
                     const product = this.products.find(p => p.id === productId);
                     if (!product) return;
                     
-                    if (this.userRole === 'vendedor' && product.stock <= 0) {
+                    if (product.stock <= 0) {
                         this.showToastMessage('Error', 'No hay suficiente stock de este producto', 'error');
                         return;
                     }
@@ -2007,13 +1285,13 @@
                     const qty = parseInt(quantity);
                     if (qty <= 0) return;
                     
-                    if (this.userRole === 'vendedor' && qty > product.stock) {
+                    if (qty > product.stock) {
                         this.showToastMessage('Error', `No hay suficiente stock. Solo quedan ${product.stock} unidades.`, 'error');
                         return;
                     }
                     
                     if (this.cart[productId]) {
-                        if (this.userRole === 'vendedor' && (this.cart[productId].quantity + qty) > product.stock) {
+                        if ((this.cart[productId].quantity + qty) > product.stock) {
                             this.showToastMessage('Error', `No puedes agregar más de lo que hay en stock. Stock actual: ${product.stock}`, 'error');
                             return;
                         }
@@ -2032,7 +1310,7 @@
                 increaseQuantity(productId) {
                     if (this.cart[productId]) {
                         const product = this.products.find(p => p.id === productId);
-                        if (this.userRole === 'vendedor' && this.cart[productId].quantity >= product.stock) {
+                        if (this.cart[productId].quantity >= product.stock) {
                             this.showToastMessage('Error', 'No puedes agregar más de lo que hay en stock', 'error');
                             return;
                         }
@@ -2074,67 +1352,126 @@
                     return subtotal + iva;
                 },
                 
+                // Checkout
                 checkout() {
                     if (Object.keys(this.cart).length === 0) {
                         this.showToastMessage('Error', 'El carrito está vacío', 'error');
                         return;
                     }
                     
-                    if (this.userRole !== 'comprador') {
-                        this.showToastMessage('Error', 'Solo los compradores pueden realizar compras', 'error');
-                        return;
-                    }
-                    
                     this.showShippingForm = true;
-                    this.showCart = false;
                 },
                 
                 confirmCheckout() {
-                    const subtotal = this.calculateSubtotal();
-                    const iva = subtotal * 0.16;
-                    const total = subtotal + iva;
+                    // Validar datos de envío
+                    if (!this.shippingData.address || !this.shippingData.city || 
+                        !this.shippingData.state || !this.shippingData.zipCode || 
+                        !this.shippingData.phone) {
+                        this.showToastMessage('Error', 'Por favor completa todos los campos obligatorios', 'error');
+                        return;
+                    }
                     
+                    if (this.shippingData.paymentMethod === 'card' && !this.shippingData.cardNumber) {
+                        this.showToastMessage('Error', 'Por favor ingresa el número de tarjeta', 'error');
+                        return;
+                    }
+                    
+                    // Crear objeto de venta
                     const saleData = {
                         buyerId: this.currentUser.uid,
                         buyerName: this.userName,
-                        buyerPhoto: this.userPhoto,
                         items: this.cart,
-                        subtotal: subtotal,
-                        iva: iva,
-                        total: total,
+                        subtotal: this.calculateSubtotal(),
+                        tax: this.calculateSubtotal() * 0.16,
+                        total: this.calculateTotal(),
                         date: firebase.database.ServerValue.TIMESTAMP,
                         status: 'pending',
                         shipping: {
-                            ...this.shippingData,
-                            status: 'pending'
+                            address: this.shippingData.address,
+                            city: this.shippingData.city,
+                            state: this.shippingData.state,
+                            zipCode: this.shippingData.zipCode,
+                            phone: this.shippingData.phone,
+                            notes: this.shippingData.notes
                         },
-                        paymentMethod: this.shippingData.paymentMethod
+                        payment: {
+                            method: this.shippingData.paymentMethod,
+                            cardNumber: this.shippingData.paymentMethod === 'card' ? this.shippingData.cardNumber : null
+                        }
                     };
                     
                     const newSaleRef = database.ref('sales').push();
+                    
                     newSaleRef.set(saleData)
                         .then(() => {
-                            this.showToastMessage('Éxito', 'Venta realizada con éxito. El vendedor recibirá tus datos de envío.');
-                            this.clearCart();
-                            this.showShippingForm = false;
-                            this.currentView = 'dashboard';
+                            // Actualizar stock de productos
+                            const updates = {};
+                            Object.keys(this.cart).forEach(productId => {
+                                const product = this.products.find(p => p.id === productId);
+                                updates[`products/${productId}/stock`] = product.stock - this.cart[productId].quantity;
+                                updates[`products/${productId}/sales`] = (product.sales || 0) + this.cart[productId].quantity;
+                            });
                             
-                            this.shippingData = {
-                                address: '',
-                                city: '',
-                                state: '',
-                                zipCode: '',
-                                phone: '',
-                                notes: '',
-                                paymentMethod: '',
-                                cardNumber: ''
+                            return database.ref().update(updates);
+                        })
+                        .then(() => {
+                            // Notificar al vendedor
+                            const notification = {
+                                title: 'Nuevo pedido',
+                                message: `El cliente ${this.userName} ha realizado un nuevo pedido`,
+                                type: 'new_order',
+                                saleId: newSaleRef.key,
+                                timestamp: firebase.database.ServerValue.TIMESTAMP,
+                                read: false
                             };
                             
-                            this.sendNotificationToVendor(newSaleRef.key, saleData);
+                            // Buscar al vendedor para enviarle la notificación
+                            return database.ref('users').orderByChild('role').equalTo('vendedor').once('value')
+                                .then(snapshot => {
+                                    const updates = {};
+                                    snapshot.forEach(userSnapshot => {
+                                        updates[`notifications/${userSnapshot.key}/${newSaleRef.key}`] = notification;
+                                    });
+                                    return database.ref().update(updates);
+                                });
+                        })
+                        .then(() => {
+                            this.showToastMessage('Éxito', 'Compra realizada con éxito');
+                            this.cart = {};
+                            this.showShippingForm = false;
+                            this.showCart = false;
+                            this.loadPurchases(this.currentUser.uid);
                         })
                         .catch(error => {
-                            this.showToastMessage('Error', 'Error al realizar la venta: ' + error.message, 'error');
+                            this.showToastMessage('Error', 'Error al realizar la compra: ' + error.message, 'error');
                         });
+                },
+                
+                // Compras
+                loadPurchases(userId) {
+                    database.ref('sales').orderByChild('buyerId').equalTo(userId).on('value', snapshot => {
+                        this.sales = [];
+                        snapshot.forEach(childSnapshot => {
+                            const sale = childSnapshot.val();
+                            sale.id = childSnapshot.key;
+                            this.sales.unshift(sale);
+                        });
+                        this.filterSales();
+                        this.recentPurchasesCount = this.sales.length;
+                    });
+                },
+                
+                filterSales() {
+                    let filtered = this.sales;
+                    
+                    if (this.salesSearchQuery) {
+                        const query = this.salesSearchQuery.toLowerCase();
+                        filtered = filtered.filter(sale => 
+                            sale.id.toLowerCase().includes(query)
+                        );
+                    }
+                    
+                    this.filteredSales = filtered;
                 },
                 
                 // Notificaciones
@@ -2157,42 +1494,6 @@
                     });
                 },
                 
-                sendNotificationToVendor(saleId, saleData) {
-                    database.ref('users').orderByChild('role').equalTo('vendedor').once('value', snapshot => {
-                        snapshot.forEach(vendorSnapshot => {
-                            const vendorId = vendorSnapshot.key;
-                            const notification = {
-                                type: 'new_order',
-                                title: 'Nueva orden recibida',
-                                message: `${saleData.buyerName} ha realizado una compra por $${saleData.total.toFixed(2)}`,
-                                saleId: saleId,
-                                timestamp: firebase.database.ServerValue.TIMESTAMP,
-                                read: false
-                            };
-                            
-                            database.ref('notifications/' + vendorId).push(notification);
-                        });
-                    });
-                },
-                
-                sendNewProductNotification(product) {
-                    database.ref('users').orderByChild('role').equalTo('comprador').once('value', snapshot => {
-                        snapshot.forEach(buyerSnapshot => {
-                            const buyerId = buyerSnapshot.key;
-                            const notification = {
-                                type: 'new_product',
-                                title: 'Nuevo producto disponible',
-                                message: `Se ha agregado ${product.name} a $${product.price.toFixed(2)}`,
-                                productId: product.id,
-                                timestamp: firebase.database.ServerValue.TIMESTAMP,
-                                read: false
-                            };
-                            
-                            database.ref('notifications/' + buyerId).push(notification);
-                        });
-                    });
-                },
-                
                 toggleNotifications() {
                     this.showNotificationsDropdown = !this.showNotificationsDropdown;
                     if (this.showNotificationsDropdown) {
@@ -2207,8 +1508,6 @@
                     
                     if (notification.saleId) {
                         this.currentView = 'history';
-                    } else if (notification.productId) {
-                        this.currentView = 'sales';
                     }
                     
                     this.showNotificationsDropdown = false;
@@ -2225,353 +1524,6 @@
                             this.showNotificationsDropdown = false;
                             this.showToastMessage('Éxito', 'Todas las notificaciones marcadas como leídas');
                         });
-                },
-                
-                // Ventas
-                loadSales() {
-                    database.ref('sales').orderByChild('date').limitToLast(50).on('value', snapshot => {
-                        this.sales = [];
-                        snapshot.forEach(childSnapshot => {
-                            const sale = childSnapshot.val();
-                            sale.id = childSnapshot.key;
-                            this.sales.unshift(sale);
-                        });
-                        this.filterSales();
-                    });
-                },
-                
-                filterSales() {
-                    let filtered = this.sales;
-                    
-                    if (this.salesSearchQuery) {
-                        const query = this.salesSearchQuery.toLowerCase();
-                        filtered = filtered.filter(sale => 
-                            sale.buyerName.toLowerCase().includes(query) ||
-                            sale.id.toLowerCase().includes(query)
-                        );
-                    }
-                    
-                    const now = new Date();
-                    if (this.salesFilter === 'today') {
-                        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-                        filtered = filtered.filter(sale => new Date(sale.date) >= today);
-                    } else if (this.salesFilter === 'week') {
-                        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-                        filtered = filtered.filter(sale => new Date(sale.date) >= weekAgo);
-                    } else if (this.salesFilter === 'month') {
-                        const monthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
-                        filtered = filtered.filter(sale => new Date(sale.date) >= monthAgo);
-                    }
-                    
-                    this.filteredSales = filtered;
-                },
-                
-                completeOrder(orderId) {
-                    database.ref('sales/' + orderId).update({
-                        status: 'completed',
-                        completedAt: firebase.database.ServerValue.TIMESTAMP
-                    })
-                    .then(() => {
-                        this.showToastMessage('Éxito', 'Pedido marcado como completado');
-                    })
-                    .catch(error => {
-                        this.showToastMessage('Error', 'Error al completar pedido: ' + error.message, 'error');
-                    });
-                },
-                
-                loadTodaySalesCount() {
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    const todayTimestamp = today.getTime();
-                    
-                    database.ref('sales').orderByChild('date').startAt(todayTimestamp).once('value', snapshot => {
-                        this.todaySalesCount = snapshot.numChildren();
-                    });
-                },
-                
-                // Gestión de productos (vendedor)
-                editProduct(product) {
-                    this.editingProduct = product;
-                    this.productForm = {
-                        name: product.name,
-                        description: product.description || '',
-                        price: product.price,
-                        stock: product.stock,
-                        category: product.category || '',
-                        image: product.image || ''
-                    };
-                    this.currentView = 'edit-product';
-                },
-                
-                handleProductImageUpload(event) {
-                    const file = event.target.files[0];
-                    if (!file) return;
-                    
-                    if (!file.type.match('image.*')) {
-                        this.showToastMessage('Error', 'Por favor selecciona una imagen válida', 'error');
-                        return;
-                    }
-                    
-                    if (file.size > 2 * 1024 * 1024) {
-                        this.showToastMessage('Error', 'La imagen es demasiado grande (máximo 2MB)', 'error');
-                        return;
-                    }
-                    
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        this.productForm.image = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                },
-                
-                saveProduct() {
-                    const productData = {
-                        name: this.productForm.name,
-                        description: this.productForm.description,
-                        price: parseFloat(this.productForm.price),
-                        stock: parseInt(this.productForm.stock),
-                        category: this.productForm.category,
-                        image: this.productForm.image,
-                        vendorId: this.currentUser.uid,
-                        vendorName: this.userName,
-                        updatedAt: firebase.database.ServerValue.TIMESTAMP
-                    };
-                    
-                    if (this.editingProduct) {
-                        database.ref('products/' + this.editingProduct.id).update(productData)
-                            .then(() => {
-                                this.showToastMessage('Éxito', 'Producto actualizado con éxito');
-                                this.cancelEdit();
-                            })
-                            .catch(error => {
-                                this.showToastMessage('Error', 'Error al actualizar producto: ' + error.message, 'error');
-                            });
-                    } else {
-                        productData.createdAt = firebase.database.ServerValue.TIMESTAMP;
-                        productData.sales = 0;
-                        
-                        database.ref('products').push(productData)
-                            .then((newProductRef) => {
-                                this.showToastMessage('Éxito', 'Producto agregado con éxito');
-                                this.cancelEdit();
-                                this.sendNewProductNotification({
-                                    id: newProductRef.key,
-                                    ...productData
-                                });
-                            })
-                            .catch(error => {
-                                this.showToastMessage('Error', 'Error al agregar producto: ' + error.message, 'error');
-                            });
-                    }
-                },
-                
-                confirmDeleteProduct(productId) {
-                    this.confirmationTitle = 'Eliminar producto';
-                    this.confirmationMessage = '¿Estás seguro de eliminar este producto?';
-                    this.confirmationAction = () => {
-                        database.ref('products/' + productId).remove()
-                            .then(() => {
-                                this.showToastMessage('Éxito', 'Producto eliminado con éxito');
-                            })
-                            .catch(error => {
-                                this.showToastMessage('Error', 'Error al eliminar producto: ' + error.message, 'error');
-                            });
-                    };
-                    this.showConfirmationModal = true;
-                },
-                
-                cancelEdit() {
-                    this.editingProduct = null;
-                    this.productForm = {
-                        name: '',
-                        description: '',
-                        price: 0,
-                        stock: 0,
-                        category: '',
-                        image: ''
-                    };
-                    this.currentView = 'products';
-                },
-                
-                exportProducts() {
-                    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.products, null, 2));
-                    const downloadAnchorNode = document.createElement('a');
-                    downloadAnchorNode.setAttribute("href", dataStr);
-                    downloadAnchorNode.setAttribute("download", "productos_pos.json");
-                    document.body.appendChild(downloadAnchorNode);
-                    downloadAnchorNode.click();
-                    downloadAnchorNode.remove();
-                    this.showToastMessage('Éxito', 'Productos exportados correctamente');
-                },
-                
-                // Gestión de usuarios
-                loadAllUsers() {
-                    if (this.userRole !== 'vendedor') return;
-                    
-                    database.ref('users').on('value', snapshot => {
-                        this.users = [];
-                        snapshot.forEach(childSnapshot => {
-                            const user = childSnapshot.val();
-                            user.id = childSnapshot.key;
-                            this.users.push(user);
-                        });
-                        this.filteredUsersList = this.users;
-                    });
-                },
-                
-                filterUsers() {
-                    if (this.usersSearchQuery) {
-                        const query = this.usersSearchQuery.toLowerCase();
-                        this.filteredUsersList = this.users.filter(user => 
-                            user.name.toLowerCase().includes(query) || 
-                            user.email.toLowerCase().includes(query) ||
-                            user.role.toLowerCase().includes(query)
-                        );
-                    } else {
-                        this.filteredUsersList = this.users;
-                    }
-                },
-                
-                editUser(user) {
-                    this.editingUser = user;
-                    this.userForm = {
-                        name: user.name,
-                        email: user.email,
-                        role: user.role,
-                        photoURL: user.photoURL || ''
-                    };
-                    this.currentView = 'edit-user';
-                },
-                
-                saveUser() {
-                    if (!this.editingUser) {
-                        this.showToastMessage('Error', 'No se puede crear usuarios desde aquí. Usa el formulario de registro.', 'error');
-                        return;
-                    }
-                    
-                    const updates = {
-                        name: this.userForm.name,
-                        role: this.userForm.role,
-                        photoURL: this.userForm.photoURL,
-                        updatedAt: firebase.database.ServerValue.TIMESTAMP
-                    };
-                    
-                    database.ref('users/' + this.editingUser.id).update(updates)
-                        .then(() => {
-                            this.showToastMessage('Éxito', 'Usuario actualizado con éxito');
-                            this.cancelUserEdit();
-                        })
-                        .catch(error => {
-                            this.showToastMessage('Error', 'Error al actualizar usuario: ' + error.message, 'error');
-                        });
-                },
-                
-                confirmDeleteUser(userId) {
-                    if (userId === this.currentUser.uid) {
-                        this.showToastMessage('Error', 'No puedes eliminarte a ti mismo', 'error');
-                        return;
-                    }
-                    
-                    this.confirmationTitle = 'Eliminar usuario';
-                    this.confirmationMessage = '¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer.';
-                    this.confirmationAction = () => {
-                        database.ref('users/' + userId).remove()
-                            .then(() => {
-                                this.showToastMessage('Éxito', 'Usuario eliminado con éxito');
-                            })
-                            .catch(error => {
-                                this.showToastMessage('Error', 'Error al eliminar usuario: ' + error.message, 'error');
-                            });
-                    };
-                    this.showConfirmationModal = true;
-                },
-                
-                cancelUserEdit() {
-                    this.editingUser = null;
-                    this.userForm = {
-                        name: '',
-                        email: '',
-                        role: 'comprador',
-                        photoURL: ''
-                    };
-                    this.currentView = 'users';
-                },
-                
-                // Reportes
-                loadReportsData() {
-                    database.ref('sales').once('value', snapshot => {
-                        let totalSales = 0;
-                        let totalAmount = 0;
-                        
-                        snapshot.forEach(childSnapshot => {
-                            const sale = childSnapshot.val();
-                            totalSales++;
-                            totalAmount += sale.total;
-                        });
-                        
-                        this.totalSalesCount = totalSales;
-                        this.totalSalesAmount = totalAmount;
-                    });
-                    
-                    this.calculateInventoryStats();
-                    
-                    database.ref('products').orderByChild('sales').limitToLast(5).once('value', snapshot => {
-                        this.topSellingProducts = [];
-                        snapshot.forEach(childSnapshot => {
-                            const product = childSnapshot.val();
-                            product.id = childSnapshot.key;
-                            this.topSellingProducts.unshift(product);
-                        });
-                    });
-                },
-                
-                calculateInventoryStats() {
-                    let totalValue = 0;
-                    let lowStock = 0;
-                    let outOfStock = 0;
-                    
-                    this.products.forEach(product => {
-                        totalValue += product.price * product.stock;
-                        if (product.stock <= 0) {
-                            outOfStock++;
-                        } else if (product.stock <= 5) {
-                            lowStock++;
-                        }
-                    });
-                    
-                    this.totalInventoryValue = totalValue;
-                    this.lowStockCount = lowStock;
-                    this.outOfStockCount = outOfStock;
-                },
-                
-                generateSalesReport() {
-                    const startDate = new Date(this.reportsStartDate);
-                    const endDate = new Date(this.reportsEndDate);
-                    
-                    database.ref('sales').orderByChild('date').startAt(startDate.getTime()).endAt(endDate.getTime()).once('value', snapshot => {
-                        let reportData = [];
-                        let totalAmount = 0;
-                        
-                        snapshot.forEach(childSnapshot => {
-                            const sale = childSnapshot.val();
-                            if (this.reportsCategory === '' || 
-                                (sale.items && Object.values(sale.items).some(item => item.category === this.reportsCategory))) {
-                                reportData.push(sale);
-                                totalAmount += sale.total;
-                            }
-                        });
-                        
-                        console.log('Reporte generado:', {
-                            fechaInicio: this.reportsStartDate,
-                            fechaFin: this.reportsEndDate,
-                            categoria: this.reportsCategory || 'Todas',
-                            totalVentas: reportData.length,
-                            montoTotal: totalAmount,
-                            ventas: reportData
-                        });
-                        
-                        this.showToastMessage('Éxito', `Reporte generado con ${reportData.length} ventas por un total de $${totalAmount.toFixed(2)}`);
-                    });
                 },
                 
                 // Perfil
