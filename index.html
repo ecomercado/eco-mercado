@@ -286,7 +286,7 @@
             margin-bottom: 10px;
         }
 
-        /* Carrito modernizado */
+        /* Carrito modernizado con efecto 3D */
         .modal {
             display: none;
             position: fixed;
@@ -298,6 +298,7 @@
             z-index: 200;
             flex-direction: column;
             overflow: hidden;
+            perspective: 1000px;
         }
         
         .modal-header {
@@ -333,17 +334,34 @@
             grid-template-columns: 30px 1fr auto;
             gap: 15px;
             padding: 15px;
-            margin-bottom: 10px;
-            background-color: white;
+            margin-bottom: 15px;
+            background: linear-gradient(145deg, #ffffff, #f9f9f9);
             border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            align-items: center;
-            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1), 
+                        0 6px 6px rgba(0,0,0,0.05),
+                        0 0 0 1px rgba(0,0,0,0.05);
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+            position: relative;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .cart-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, #FF5722, #FF9800);
+            border-radius: 10px 10px 0 0;
         }
         
         .cart-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-5px) rotateX(5deg);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15), 
+                        0 10px 10px rgba(0,0,0,0.1),
+                        0 0 0 1px rgba(0,0,0,0.05);
         }
         
         .cart-item-select {
@@ -417,10 +435,11 @@
         .cart-footer {
             position: sticky;
             bottom: 0;
-            background-color: white;
+            background: linear-gradient(to bottom, #ffffff, #f9f9f9);
             padding: 15px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-            border-top: 1px solid #f0f0f0;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
+            border-top: 1px solid #e0e0e0;
+            border-radius: 0 0 10px 10px;
         }
         
         .cart-actions {
@@ -468,7 +487,7 @@
         }
         
         .checkout-btn {
-            background-color: #25D366;
+            background: linear-gradient(to right, #25D366, #128C7E);
             color: white;
             border: none;
             border-radius: 25px;
@@ -479,12 +498,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.2s, transform 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
         }
         
         .checkout-btn:hover {
-            background-color: #128C7E;
-            transform: translateY(-2px);
+            background: linear-gradient(to right, #128C7E, #25D366);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
         }
         
         .checkout-btn i {
@@ -570,6 +591,12 @@
             display: flex;
             flex-direction: column;
             position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .product-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
         
         .product-image {
@@ -579,6 +606,26 @@
             margin-bottom: 10px;
             border-radius: 4px;
             cursor: pointer;
+            transition: all 0.5s ease;
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+        }
+        
+        .product-item:hover .product-image {
+            transform: scale(1.05) rotateY(5deg);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        /* Efecto de carga para imágenes */
+        @keyframes shimmer {
+            0% { background-position: -468px 0 }
+            100% { background-position: 468px 0 }
+        }
+        
+        .product-image.loading {
+            background: linear-gradient(to right, #f6f6f6 8%, #f0f0f0 18%, #f6f6f6 33%);
+            background-size: 800px 104px;
+            animation: shimmer 1.5s infinite linear;
         }
         
         .product-brand {
@@ -697,6 +744,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .add-to-cart:hover {
+            background-color: #E64A19;
+            transform: translateY(-2px);
         }
         
         .whatsapp-btn {
@@ -710,6 +763,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .whatsapp-btn:hover {
+            background-color: #128C7E;
+            transform: translateY(-2px);
         }
         
         .banner {
@@ -784,6 +843,9 @@
         .image-modal-content {
             max-width: 90%;
             max-height: 90%;
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
         
         .image-modal-close {
@@ -793,6 +855,11 @@
             color: white;
             font-size: 30px;
             cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .image-modal-close:hover {
+            transform: rotate(90deg);
         }
         
         .image-modal-actions {
@@ -817,6 +884,12 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .image-modal-btn:hover {
+            transform: scale(1.1);
+            background-color: white;
         }
         
         /* Soporte WhatsApp */
@@ -836,11 +909,11 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             z-index: 100;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.3s ease;
         }
         
         .support-whatsapp:hover {
-            transform: scale(1.1);
+            transform: scale(1.1) rotate(5deg);
         }
 
         /* Overlay para cuando el menú está abierto */
@@ -1010,7 +1083,7 @@
         let cart = [];
         let products = [];
         let categories = [];
-        const whatsappNumber = "5363868677"; // Número de WhatsApp actualizado
+        const whatsappNumber = "5363868677"; // Número de WhatsApp actualizado para Cuba
         
         // Elementos del DOM
         const allProductsContainer = document.getElementById('all-products');
@@ -1198,10 +1271,10 @@
             // Actualizar contador del carrito
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
             
-            // Mostrar/ocultar el contador solo si hay items
+            cartCountElement.textContent = totalItems;
+            footerCartCountElement.textContent = totalItems;
+            
             if (totalItems > 0) {
-                cartCountElement.textContent = totalItems;
-                footerCartCountElement.textContent = totalItems;
                 cartCountElement.style.display = 'flex';
                 footerCartCountElement.style.display = 'flex';
             } else {
@@ -1209,7 +1282,6 @@
                 footerCartCountElement.style.display = 'none';
             }
             
-            // Si el modal del carrito está abierto, actualizar su contenido
             if (cartModal.style.display === 'flex') {
                 renderCartItems();
             }
@@ -1569,7 +1641,7 @@
             supportWhatsappBtn.addEventListener('click', () => {
                 const message = '¡Hola! Necesito soporte con mi compra en TecnoShop.';
                 const encodedMessage = encodeURIComponent(message);
-                window.open(`https://wa.me/51${whatsappNumber}?text=${encodedMessage}`, '_blank');
+                window.open(`https://wa.me/53${whatsappNumber}?text=${encodedMessage}`, '_blank');
             });
             
             // Seleccionar/deseleccionar todos los items
@@ -1631,7 +1703,7 @@
                                        `¿Podrías ayudarme con esta compra?`;
                         
                         const encodedMessage = encodeURIComponent(message);
-                        window.open(`https://wa.me/51${whatsappNumber}?text=${encodedMessage}`, '_blank');
+                        window.open(`https://wa.me/53${whatsappNumber}?text=${encodedMessage}`, '_blank');
                     }
                 }
                 
