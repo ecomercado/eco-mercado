@@ -95,7 +95,6 @@
             transform: scale(1.1);
         }
         
-        /* Banner mejorado */
         .banner-slider {
             position: relative;
             width: 100%;
@@ -188,7 +187,6 @@
             background-color: var(--primary-color);
         }
         
-        /* Resto del CSS... */
         .side-menu {
             position: fixed;
             top: 0;
@@ -973,6 +971,8 @@
         
         let products = [];
         let categories = [];
+        let currentSlide = 0;
+        let slideInterval;
         const telegramUsername = "tiendavende";
         
         const elements = {
@@ -993,13 +993,13 @@
             imageModal: document.getElementById('image-modal'),
             expandedImg: document.getElementById('expanded-img'),
             imageModalClose: document.querySelector('.image-modal-close'),
+            shareBtn: document.getElementById('share-btn'),
             searchToggle: document.getElementById('search-toggle'),
             searchBar: document.getElementById('search-bar'),
             searchInput: document.getElementById('search-input'),
             searchClear: document.getElementById('search-clear'),
             searchResults: document.getElementById('search-results'),
-            searchBack: document.getElementById('search-back'),
-            shareBtn: document.getElementById('share-btn')
+            searchBack: document.getElementById('search-back')
         };
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -1101,6 +1101,7 @@
             db.collection("products").get()
                 .then(querySnapshot => {
                     elements.productList.innerHTML = '';
+                    products = [];
                     
                     if (querySnapshot.empty) {
                         elements.productList.innerHTML = '<div class="empty">No hay productos disponibles</div>';
@@ -1108,7 +1109,8 @@
                     }
 
                     querySnapshot.forEach(doc => {
-                        const product = doc.data();
+                        const product = { id: doc.id, ...doc.data() };
+                        products.push(product);
                         const productElement = createProductElement(product);
                         elements.productList.appendChild(productElement);
                     });
@@ -1122,6 +1124,8 @@
         function createProductElement(product) {
             const productElement = document.createElement('div');
             productElement.className = 'product-item';
+            productElement.dataset.id = product.id;
+            productElement.dataset.category = product.category || 'all';
             
             let featuresHtml = '';
             if (product.features && product.features.length > 0) {
@@ -1166,6 +1170,7 @@
             db.collection("categories").orderBy("name").get()
                 .then(querySnapshot => {
                     elements.menuCategories.innerHTML = '';
+                    categories = [];
                     
                     const allCategory = document.createElement('div');
                     allCategory.className = 'menu-category active';
@@ -1175,10 +1180,12 @@
                     elements.menuCategories.appendChild(allCategory);
                     
                     querySnapshot.forEach(doc => {
-                        const category = doc.data();
+                        const category = { id: doc.id, ...doc.data() };
+                        categories.push(category);
+                        
                         const categoryElement = document.createElement('div');
                         categoryElement.className = 'menu-category';
-                        categoryElement.dataset.category = doc.id;
+                        categoryElement.dataset.category = category.id;
                         categoryElement.innerHTML = `<i class="fas ${category.icon || 'fa-box'}"></i> ${category.name}`;
                         categoryElement.addEventListener('click', filterByCategory);
                         elements.menuCategories.appendChild(categoryElement);
@@ -1191,38 +1198,50 @@
         }
 
         function filterByCategory(e) {
-            const categoryItem = e.target;
+            const categoryItem = e.currentTarget;
             document.querySelectorAll('.menu-category').forEach(item => {
                 item.classList.remove('active');
             });
             
+            const categoryId = categoryItem.dataset.category;
             categoryItem.classList.add('active');
-            // Aquí implementarías la lógica para filtrar productos por categoría
+            
+            filterProductsByCategory(categoryId);
+        }
+
+        function filterProductsByCategory(categoryId) {
+            const productElements = document.querySelectorAll('.product-item');
+            
+            productElements.forEach(element => {
+                if (categoryId === 'all' || element.dataset.category === categoryId) {
+                    element.style.display = 'flex';
+                } else {
+                    element.style.display = 'none';
+                }
+            });
+            
+            window.scrollTo({
+                top: document.querySelector('.section-title').offsetTop - 60,
+                behavior: 'smooth'
+            });
         }
 
         function setupEventListeners() {
             // Menú toggle
-            elements.menuToggle.addEventListener('click', () => {
-                elements.sideMenu.classList.toggle('open');
-                elements.overlay.classList.toggle('active');
-                document.body.classList.toggle('menu-open');
+            elements.menuToggle.addEventListener('click', toggleSideMenu);
+            elements.closeMenu.addEventListener('click', closeSideMenu);
+            elements.overlay.addEventListener('click', closeSideMenu);
+
+            // Botón de Telegram del menú
+            document.getElementById('support-menu-btn').addEventListener('click', () => {
+                const message = '¡Hola! Necesito soporte con mi compra en TecnoShop.';
+                window.open(`https://t.me/${telegramUsername}?text=${encodeURIComponent(message)}`, '_blank');
+                closeSideMenu();
             });
 
-            elements.closeMenu.addEventListener('click', () => {
-                elements.sideMenu.classList.remove('open');
-                elements.overlay.classList.remove('active');
-                document.body.classList.remove('menu-open');
-            });
-
-            elements.overlay.addEventListener('click', () => {
-                elements.sideMenu.classList.remove('open');
-                elements.overlay.classList.remove('active');
-                document.body.classList.remove('menu-open');
-            });
-
-            // Botón de Telegram
+            // Botón de Telegram flotante
             elements.supportTelegram.addEventListener('click', () => {
-                const message = '¡Hola! Estoy interesado en los productos de TecnoShop.';
+                const message = '¡Hola! Necesito soporte con mi compra en TecnoShop.';
                 window.open(`https://t.me/${telegramUsername}?text=${encodeURIComponent(message)}`, '_blank');
             });
 
@@ -1231,12 +1250,12 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 document.querySelectorAll('.footer-item').forEach(item => item.classList.remove('active'));
                 elements.homeBtn.classList.add('active');
+                filterProductsByCategory('all');
+                closeSideMenu();
             });
 
             elements.categoriesBtn.addEventListener('click', () => {
-                elements.sideMenu.classList.add('open');
-                elements.overlay.classList.add('active');
-                document.body.classList.add('menu-open');
+                toggleSideMenu();
                 document.querySelectorAll('.footer-item').forEach(item => item.classList.remove('active'));
                 elements.categoriesBtn.classList.add('active');
             });
@@ -1249,52 +1268,218 @@
             });
 
             // Modal de imagen
-            elements.imageModalClose.addEventListener('click', () => {
-                elements.imageModal.classList.remove('show');
-                setTimeout(() => {
-                    elements.imageModal.style.display = 'none';
-                }, 300);
-            });
-
+            elements.imageModalClose.addEventListener('click', closeImageModal);
             elements.imageModal.addEventListener('click', (e) => {
                 if (e.target === elements.imageModal) {
-                    elements.imageModal.classList.remove('show');
-                    setTimeout(() => {
-                        elements.imageModal.style.display = 'none';
-                    }, 300);
+                    closeImageModal();
+                }
+            });
+
+            // Compartir imagen
+            elements.shareBtn.addEventListener('click', () => {
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Mira este producto en TecnoShop',
+                        text: 'Encontré este producto interesante en TecnoShop',
+                        url: window.location.href,
+                    }).catch(error => console.log('Error al compartir:', error));
+                } else {
+                    const productId = elements.expandedImg.src.split('/').pop().split('.')[0];
+                    const product = products.find(p => p.id === productId);
+                    if (product) {
+                        const message = `Mira este producto: ${product.name} - CUP ${product.price.toFixed(2)}`;
+                        window.open(`https://t.me/${telegramUsername}?text=${encodeURIComponent(message)}`, '_blank');
+                    }
                 }
             });
 
             // Búsqueda
-            elements.searchToggle.addEventListener('click', () => {
-                elements.searchBar.classList.toggle('active');
-                if (elements.searchBar.classList.contains('active')) {
-                    elements.searchInput.focus();
-                } else {
-                    elements.searchInput.value = '';
-                    elements.searchResults.classList.remove('active');
-                    elements.searchClear.style.display = 'none';
+            elements.searchToggle.addEventListener('click', toggleSearchBar);
+            elements.searchBack.addEventListener('click', toggleSearchBar);
+            elements.searchInput.addEventListener('input', handleSearchInput);
+            elements.searchClear.addEventListener('click', clearSearch);
+
+            // Event delegation para botones dinámicos
+            document.addEventListener('click', (e) => {
+                // Botón de compra
+                if (e.target.classList.contains('buy-now') || e.target.closest('.buy-now')) {
+                    handleBuyNowClick(e);
+                }
+                
+                // Botones de cantidad
+                if (e.target.classList.contains('plus') || e.target.closest('.plus')) {
+                    handleQuantityChange(e, 1);
+                }
+                
+                if (e.target.classList.contains('minus') || e.target.closest('.minus')) {
+                    handleQuantityChange(e, -1);
+                }
+                
+                // Características del producto
+                if (e.target.classList.contains('toggle-features') || e.target.closest('.toggle-features')) {
+                    toggleFeatures(e);
+                }
+                
+                // Imagen del producto
+                if (e.target.classList.contains('product-image') || e.target.closest('.product-image')) {
+                    handleProductImageClick(e);
                 }
             });
+        }
 
-            elements.searchBack.addEventListener('click', () => {
-                elements.searchBar.classList.remove('active');
-                elements.searchInput.value = '';
-                elements.searchResults.classList.remove('active');
-                elements.searchClear.style.display = 'none';
-            });
+        function handleBuyNowClick(e) {
+            const productElement = e.target.closest('.product-item');
+            const productId = productElement.dataset.id;
+            const product = products.find(p => p.id === productId);
+            const quantity = parseInt(productElement.querySelector('.quantity').textContent);
+            
+            if (product) {
+                const message = `¡Hola! Estoy interesado en comprar:\n\n` +
+                               `- ${product.name}\n` +
+                               `Cantidad: ${quantity}\n` +
+                               `Precio unitario: CUP ${product.price.toFixed(2)}\n` +
+                               `Total: CUP ${(product.price * quantity).toFixed(2)}\n\n` +
+                               `¿Podrías ayudarme con esta compra?`;
+                
+                window.open(`https://t.me/${telegramUsername}?text=${encodeURIComponent(message)}`, '_blank');
+            }
+        }
 
-            elements.searchInput.addEventListener('input', (e) => {
-                const query = e.target.value.trim();
-                elements.searchClear.style.display = query ? 'block' : 'none';
-                // Aquí implementarías la lógica de búsqueda
-            });
+        function handleQuantityChange(e, change) {
+            const quantityElement = e.target.closest('.quantity-selector').querySelector('.quantity');
+            const newQuantity = parseInt(quantityElement.textContent) + change;
+            if (newQuantity > 0) {
+                quantityElement.textContent = newQuantity;
+            }
+        }
 
-            elements.searchClear.addEventListener('click', () => {
-                elements.searchInput.value = '';
-                elements.searchResults.classList.remove('active');
-                elements.searchClear.style.display = 'none';
+        function toggleFeatures(e) {
+            const toggleElement = e.target.classList.contains('toggle-features') ? e.target : e.target.closest('.toggle-features');
+            const featuresContainer = toggleElement.closest('.product-features');
+            const ul = featuresContainer.querySelector('ul');
+            const isHidden = ul.style.display === 'none';
+            
+            ul.style.display = isHidden ? 'block' : 'none';
+            toggleElement.textContent = isHidden ? 'Ocultar características ▲' : 'Ver características ▼';
+        }
+
+        function handleProductImageClick(e) {
+            const imgSrc = e.target.classList.contains('product-image') ? e.target.src : e.target.closest('.product-image').src;
+            openImageModal(imgSrc);
+        }
+
+        function openImageModal(imgSrc) {
+            elements.expandedImg.src = imgSrc;
+            elements.imageModal.style.display = 'flex';
+            setTimeout(() => {
+                elements.imageModal.classList.add('show');
+            }, 10);
+        }
+
+        function closeImageModal() {
+            elements.imageModal.classList.remove('show');
+            setTimeout(() => {
+                elements.imageModal.style.display = 'none';
+            }, 300);
+        }
+
+        function toggleSideMenu() {
+            elements.sideMenu.classList.toggle('open');
+            elements.overlay.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
+        }
+
+        function closeSideMenu() {
+            elements.sideMenu.classList.remove('open');
+            elements.overlay.classList.remove('active');
+            document.body.classList.remove('menu-open');
+        }
+
+        function toggleSearchBar() {
+            elements.searchBar.classList.toggle('active');
+            if (elements.searchBar.classList.contains('active')) {
                 elements.searchInput.focus();
+                document.body.style.overflow = 'hidden';
+            } else {
+                elements.searchInput.value = '';
+                elements.searchResults.classList.remove('active');
+                elements.searchClear.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        }
+
+        function handleSearchInput(e) {
+            const query = e.target.value.trim();
+            elements.searchClear.style.display = query ? 'block' : 'none';
+            performSearch(query);
+        }
+
+        function clearSearch() {
+            elements.searchInput.value = '';
+            elements.searchResults.classList.remove('active');
+            elements.searchClear.style.display = 'none';
+            elements.searchInput.focus();
+        }
+
+        function performSearch(query) {
+            if (query.length < 2) {
+                elements.searchResults.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <p>Ingresa un término de búsqueda</p>
+                    </div>
+                `;
+                elements.searchResults.classList.add('active');
+                return;
+            }
+            
+            const lowerQuery = query.toLowerCase();
+            const results = products.filter(product => 
+                product.name.toLowerCase().includes(lowerQuery) || 
+                (product.description && product.description.toLowerCase().includes(lowerQuery)) ||
+                (product.brand && product.brand.toLowerCase().includes(lowerQuery))
+            ).slice(0, 10);
+            
+            if (results.length === 0) {
+                elements.searchResults.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <p>No se encontraron productos</p>
+                        <p>Intenta con otro término</p>
+                    </div>
+                `;
+            } else {
+                elements.searchResults.innerHTML = results.map(product => {
+                    const category = categories.find(c => c.id === product.category) || { name: 'General' };
+                    return `
+                        <div class="search-result-item" data-id="${product.id}">
+                            ${product.image ? `<img src="${product.image}" alt="${product.name}">` : '<div style="width:50px; height:50px; background:#f5f5f5; border-radius:4px;"></div>'}
+                            <div class="search-result-info">
+                                <div class="search-result-name">${product.name}</div>
+                                <div class="search-result-price">CUP ${product.price.toFixed(2)}</div>
+                                <div class="search-result-category">${category.name}</div>
+                            </div>
+                            <i class="fas fa-chevron-right" style="color:#ccc;"></i>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            elements.searchResults.classList.add('active');
+            
+            document.querySelectorAll('.search-result-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const productId = item.dataset.id;
+                    toggleSearchBar();
+                    const productElement = document.querySelector(`.product-item[data-id="${productId}"]`);
+                    if (productElement) {
+                        productElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        productElement.style.boxShadow = '0 0 0 2px var(--primary-color)';
+                        setTimeout(() => {
+                            productElement.style.boxShadow = 'var(--shadow)';
+                        }, 2000);
+                    }
+                });
             });
         }
 
@@ -1319,10 +1504,6 @@
                 }
             });
         }
-
-        // Variables globales para el slider
-        let currentSlide = 0;
-        let slideInterval;
     </script>
 </body>
 </html>
