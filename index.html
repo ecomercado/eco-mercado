@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --primary-color: #0066CC;
-            --primary-dark: #004D99;
-            --primary-light: #3385FF;
+            --primary-color: #000000; /* Cambiado de #0066CC a #000000 */
+            --primary-dark: #000000; /* Cambiado de #004D99 a #000000 */
+            --primary-light: #333333; /* Cambiado de #3385FF a #333333 */
             --accent-color: #FF6600;
             --text-color: #333333;
             --text-light: #666666;
@@ -224,7 +224,7 @@
             background-position: right 12px center;
             background-size: 18px;
             transition: var(--transition);
-            box-shadow: 0 2px 8px rgba(0, 102, 204, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Cambiado el color de la sombra */
         }
         
         .province-selector select:focus {
@@ -234,6 +234,8 @@
         }
         
         .province-badge {
+            position: absolute;
+            right: 30px;
             background-color: var(--accent-color);
             color: white;
             padding: 6px 12px;
@@ -307,12 +309,12 @@
         }
         
         .menu-category:hover {
-            background-color: rgba(0, 102, 204, 0.05);
+            background-color: rgba(0, 0, 0, 0.05); /* Cambiado el color del hover */
             color: var(--primary-color);
         }
         
         .menu-category.active {
-            background-color: rgba(0, 102, 204, 0.1);
+            background-color: rgba(0, 0, 0, 0.1); /* Cambiado el color del activo */
             color: var(--primary-color);
             font-weight: 500;
             border-left: 3px solid var(--primary-color);
@@ -371,7 +373,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             transition: var(--transition);
-            box-shadow: 0 2px 8px rgba(0, 102, 204, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Cambiado el color de la sombra */
         }
         
         .search-input:focus {
@@ -426,7 +428,7 @@
         }
         
         .search-result-item:hover {
-            background-color: rgba(0, 102, 204, 0.05);
+            background-color: rgba(0, 0, 0, 0.05); /* Cambiado el color del hover */
             transform: translateX(5px);
         }
         
@@ -947,7 +949,7 @@
         .ripple {
             position: absolute;
             border-radius: 50%;
-            background-color: rgba(0, 102, 204, 0.3);
+            background-color: rgba(0, 0, 0, 0.3); /* Cambiado el color del ripple */
             transform: scale(0);
             animation: ripple 0.6s linear;
             pointer-events: none;
@@ -985,6 +987,465 @@
         .seller-telegram i {
             color: #0088cc;
         }
+
+        /* Nuevos estilos para el botón de vendedor */
+        .seller-btn-container {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        .seller-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 20px;
+            font-size: var(--font-size-medium);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Cambiado el color de la sombra */
+        }
+
+        .seller-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Cambiado el color de la sombra */
+        }
+
+        .seller-btn i {
+            font-size: 1.1rem;
+        }
+
+        /* Estilos para la bolsa de compra */
+        .bag-btn {
+            position: fixed;
+            bottom: 60px;
+            left: 15px;
+            background: var(--primary-color);
+            color: white;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Cambiado el color de la sombra */
+            z-index: 100;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid var(--primary-color);
+        }
+
+        .bag-btn:hover {
+            transform: scale(1.1);
+            background: var(--primary-dark);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); /* Cambiado el color de la sombra */
+        }
+
+        .bag-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--accent-color);
+            color: white;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Modal de la bolsa */
+        .bag-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.95);
+            z-index: 300;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .bag-modal.show {
+            opacity: 1;
+            display: flex;
+        }
+
+        .bag-modal-content {
+            background: var(--bg-color);
+            width: 95%;
+            max-width: 500px;
+            max-height: 80vh;
+            border-radius: 10px;
+            overflow: hidden;
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bag-modal.show .bag-modal-content {
+            transform: scale(1);
+        }
+
+        .bag-modal-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bag-modal-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .bag-modal-close {
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .bag-modal-close:hover {
+            transform: rotate(90deg);
+        }
+
+        .bag-modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .bag-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .bag-item-image {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            margin-right: 10px;
+            border-radius: 5px;
+            background: #f5f5f5;
+            border: 1px solid var(--border-color);
+        }
+
+        .bag-item-info {
+            flex: 1;
+        }
+
+        .bag-item-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 3px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .bag-item-price {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .bag-item-quantity {
+            display: flex;
+            align-items: center;
+        }
+
+        .bag-item-quantity-btn {
+            width: 22px;
+            height: 22px;
+            background: #e0e0e0;
+            border: none;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .bag-item-quantity-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .bag-item-quantity-value {
+            margin: 0 8px;
+            font-size: 0.9rem;
+        }
+
+        .bag-item-remove {
+            margin-left: 10px;
+            color: #ff4444;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .bag-item-remove:hover {
+            transform: scale(1.2);
+        }
+
+        .bag-empty {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--text-light);
+        }
+
+        .bag-empty i {
+            font-size: 3rem;
+            color: #e0e0e0;
+            margin-bottom: 15px;
+        }
+
+        .bag-modal-footer {
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            background: var(--card-bg);
+        }
+
+        .bag-total {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .bag-total-label {
+            color: var(--text-color);
+        }
+
+        .bag-total-value {
+            color: var(--primary-color);
+        }
+
+        .bag-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .bag-clear-btn {
+            flex: 1;
+            background: #f5f5f5;
+            color: var(--text-color);
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .bag-clear-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .bag-checkout-btn {
+            flex: 2;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .bag-checkout-btn:hover {
+            background: #e55c00;
+        }
+
+        .bag-checkout-btn i {
+            font-size: 1.1rem;
+        }
+
+        .add-to-bag-btn {
+            background: var(--primary-color);
+            color: white;
+            border: 1px solid var(--primary-color);
+            border-radius: 5px;
+            padding: 8px 10px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            margin-top: 8px;
+        }
+
+        .add-to-bag-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .product-purchase-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        /* Nuevos estilos para las categorías en la pantalla principal */
+        .categories-container {
+            padding: 15px;
+            background: var(--bg-color);
+            margin-bottom: 12px;
+        }
+
+        .categories-title {
+            font-size: var(--font-size-large);
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .categories-title span {
+            font-size: var(--font-size-small);
+            color: var(--primary-light);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .categories-title span:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        @media (min-width: 768px) {
+            .categories-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .categories-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+
+        .category-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            aspect-ratio: 1/1;
+        }
+
+        .category-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            background: rgba(0, 0, 0, 0.05); /* Cambiado el color del hover */
+        }
+
+        .category-card.active {
+            background: rgba(0, 0, 0, 0.1); /* Cambiado el color del activo */
+            border: 1px solid var(--primary-color);
+        }
+
+        .category-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .category-name {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--text-color);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+
+        /* Estilo para el botón de ver todas las categorías */
+        .view-all-categories {
+            grid-column: 1 / -1;
+            background: var(--primary-light);
+            color: white;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid var(--primary-color);
+        }
+
+        .view-all-categories:hover {
+            background: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .view-all-categories i {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .view-all-categories span {
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -1001,6 +1462,11 @@
         <div class="menu-category" id="support-menu-btn">
             <i class="fas fa-headset"></i>
             <span>Soporte por Telegram</span>
+        </div>
+        <!-- Botón para vendedores en el menú -->
+        <div class="menu-category" id="seller-menu-btn">
+            <i class="fas fa-store"></i>
+            <span>Quiero vender</span>
         </div>
     </div>
     
@@ -1056,6 +1522,25 @@
         <h2>VENTA DE PRODUCTOS TODO CUBA</h2>
         <p>Los mejores precios y la mayor variedad de productos en toda Cuba. Envíos a todas las provincias.</p>
     </div>
+
+    <!-- Sección de categorías en la pantalla principal -->
+    <div class="categories-container">
+        <div class="categories-title">
+            <span>Categorías</span>
+            <span id="view-all-categories">Ver todas</span>
+        </div>
+        <div class="categories-grid" id="categories-grid">
+            <div class="loading">Cargando categorías...</div>
+        </div>
+    </div>
+
+    <!-- Botón para vendedores -->
+    <div class="seller-btn-container">
+        <button class="seller-btn" id="seller-btn">
+            <i class="fas fa-store"></i>
+            ¿Quieres vender tus productos? Regístrate aquí
+        </button>
+    </div>
     
     <div class="search-bar" id="search-bar">
         <div class="search-container">
@@ -1076,6 +1561,12 @@
     <div class="section-title">Productos destacados</div>
     <div class="product-list" id="product-list">
         <div class="loading">Cargando productos...</div>
+    </div>
+    
+    <!-- Botón de bolsa de compra -->
+    <div class="bag-btn" id="bag-btn">
+        <i class="fas fa-shopping-bag"></i>
+        <span class="bag-count" id="bag-count">0</span>
     </div>
     
     <!-- Botón de Telegram -->
@@ -1110,6 +1601,35 @@
         </div>
     </div>
 
+    <!-- Modal de la bolsa -->
+    <div class="bag-modal" id="bag-modal">
+        <div class="bag-modal-content">
+            <div class="bag-modal-header">
+                <div class="bag-modal-title">Tu bolsa de compra</div>
+                <div class="bag-modal-close" id="bag-modal-close">&times;</div>
+            </div>
+            <div class="bag-modal-body" id="bag-modal-body">
+                <div class="bag-empty">
+                    <i class="fas fa-shopping-bag"></i>
+                    <p>Tu bolsa está vacía</p>
+                </div>
+            </div>
+            <div class="bag-modal-footer" id="bag-modal-footer" style="display: none;">
+                <div class="bag-total">
+                    <span class="bag-total-label">Total:</span>
+                    <span class="bag-total-value" id="bag-total-value">CUP 0.00</span>
+                </div>
+                <div class="bag-actions">
+                    <button class="bag-clear-btn" id="bag-clear-btn">Vaciar bolsa</button>
+                    <button class="bag-checkout-btn" id="bag-checkout-btn">
+                        <i class="fab fa-telegram"></i>
+                        Comprar por Telegram
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
@@ -1136,6 +1656,10 @@
         let currentSlide = 0;
         let slideInterval;
         const telegramUsername = "tiendavende"; // Usuario de Telegram para soporte
+        const sellerRegistrationUrl = "https://ecomercado.github.io/Vendedor-/"; // URL para registro de vendedores
+        
+        // Bolsa de compra
+        let shoppingBag = JSON.parse(localStorage.getItem('shoppingBag')) || [];
         
         const elements = {
             menuToggle: document.getElementById('menu-toggle'),
@@ -1163,7 +1687,20 @@
             searchResults: document.getElementById('search-results'),
             searchBack: document.getElementById('search-back'),
             provinceSelect: document.getElementById('province-select'),
-            provinceBadge: document.getElementById('province-badge')
+            provinceBadge: document.getElementById('province-badge'),
+            sellerBtn: document.getElementById('seller-btn'),
+            sellerMenuBtn: document.getElementById('seller-menu-btn'),
+            bagBtn: document.getElementById('bag-btn'),
+            bagCount: document.getElementById('bag-count'),
+            bagModal: document.getElementById('bag-modal'),
+            bagModalBody: document.getElementById('bag-modal-body'),
+            bagModalFooter: document.getElementById('bag-modal-footer'),
+            bagModalClose: document.getElementById('bag-modal-close'),
+            bagTotalValue: document.getElementById('bag-total-value'),
+            bagClearBtn: document.getElementById('bag-clear-btn'),
+            bagCheckoutBtn: document.getElementById('bag-checkout-btn'),
+            categoriesGrid: document.getElementById('categories-grid'),
+            viewAllCategories: document.getElementById('view-all-categories')
         };
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -1172,6 +1709,7 @@
             loadCategories();
             setupEventListeners();
             setupRippleEffect();
+            updateBagCount();
         });
 
         function loadBanners() {
@@ -1181,7 +1719,7 @@
                     elements.bannerDots.innerHTML = '';
 
                     if (querySnapshot.empty) {
-                        elements.bannerSlides.innerHTML = '<div class="banner-slide"><img src="https://via.placeholder.com/800x180/FFFFFF/0066CC?text=Venta+por+todo+Cuba" alt=conecta a un servidor internacinal"></div>';
+                        elements.bannerSlides.innerHTML = '<div class="banner-slide"><img src="https://via.placeholder.com/800x180/FFFFFF/000000?text=Venta+por+todo+Cuba" alt=conecta a un servidor internacinal"></div>';
                         return;
                     }
 
@@ -1340,13 +1878,14 @@
                 ${product.stock ? `<div class="product-stock">◆ Stock ${product.stock}</div>` : ''}
                 ${sellerContactHtml}
                 ${featuresHtml}
-                <div class="product-purchase">
+                <div class="product-purchase-buttons">
                     <div class="quantity-selector">
                         <button class="quantity-btn minus">-</button>
                         <span class="quantity">1</span>
                         <button class="quantity-btn plus">+</button>
                     </div>
-                    <button class="telegram-btn buy-now"><i class="fab fa-telegram" style="margin-right: 8px;"></i> Comprar</button>
+                    <button class="add-to-bag-btn"><i class="fas fa-shopping-bag" style="margin-right: 8px;"></i> Añadir a la bolsa</button>
+                    <button class="telegram-btn buy-now"><i class="fab fa-telegram" style="margin-right: 8px;"></i> Comprar ahora</button>
                 </div>
             `;
             
@@ -1435,8 +1974,10 @@
             db.collection("categories").orderBy("name").get()
                 .then(querySnapshot => {
                     elements.menuCategories.innerHTML = '';
+                    elements.categoriesGrid.innerHTML = '';
                     categories = [];
                     
+                    // Crear categoría "Todos" para el menú lateral
                     const allCategory = document.createElement('div');
                     allCategory.className = 'menu-category active';
                     allCategory.dataset.category = 'all';
@@ -1444,33 +1985,79 @@
                     allCategory.addEventListener('click', filterByCategory);
                     elements.menuCategories.appendChild(allCategory);
                     
+                    // Crear categoría "Todos" para la pantalla principal
+                    const allCategoryCard = document.createElement('div');
+                    allCategoryCard.className = 'category-card active';
+                    allCategoryCard.dataset.category = 'all';
+                    allCategoryCard.innerHTML = `
+                        <div class="category-icon" style="background: var(--accent-color);">
+                            <i class="fas fa-boxes"></i>
+                        </div>
+                        <div class="category-name">Todos</div>
+                    `;
+                    allCategoryCard.addEventListener('click', filterByCategory);
+                    elements.categoriesGrid.appendChild(allCategoryCard);
+                    
                     querySnapshot.forEach(doc => {
                         const category = { id: doc.id, ...doc.data() };
                         categories.push(category);
                         
+                        // Crear elemento para el menú lateral
                         const categoryElement = document.createElement('div');
                         categoryElement.className = 'menu-category';
                         categoryElement.dataset.category = category.id;
                         categoryElement.innerHTML = `<i class="fas ${category.icon || 'fa-box'}"></i> ${category.name}`;
                         categoryElement.addEventListener('click', filterByCategory);
                         elements.menuCategories.appendChild(categoryElement);
+                        
+                        // Crear tarjeta para la pantalla principal
+                        const categoryCard = document.createElement('div');
+                        categoryCard.className = 'category-card';
+                        categoryCard.dataset.category = category.id;
+                        categoryCard.innerHTML = `
+                            <div class="category-icon">
+                                <i class="fas ${category.icon || 'fa-box'}"></i>
+                            </div>
+                            <div class="category-name">${category.name}</div>
+                        `;
+                        categoryCard.addEventListener('click', filterByCategory);
+                        elements.categoriesGrid.appendChild(categoryCard);
                     });
+
+                    // Agregar botón "Ver todas" al final
+                    const viewAllCard = document.createElement('div');
+                    viewAllCard.className = 'view-all-categories';
+                    viewAllCard.innerHTML = `
+                        <i class="fas fa-ellipsis-h"></i>
+                        <span>Ver todas</span>
+                    `;
+                    viewAllCard.addEventListener('click', toggleSideMenu);
+                    elements.categoriesGrid.appendChild(viewAllCard);
                 })
                 .catch(error => {
                     console.error("Error loading categories:", error);
                     elements.menuCategories.innerHTML = '<div class="error">Error al cargar categorías</div>';
+                    elements.categoriesGrid.innerHTML = '<div class="error">Error al cargar categorías</div>';
                 });
         }
 
         function filterByCategory(e) {
             const categoryItem = e.currentTarget;
+            const categoryId = categoryItem.dataset.category;
+            
+            // Actualizar estado activo en el menú lateral
             document.querySelectorAll('.menu-category').forEach(item => {
                 item.classList.remove('active');
             });
+            document.querySelector(`.menu-category[data-category="${categoryId}"]`).classList.add('active');
             
-            const categoryId = categoryItem.dataset.category;
-            categoryItem.classList.add('active');
+            // Actualizar estado activo en las tarjetas de categoría
+            document.querySelectorAll('.category-card').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`.category-card[data-category="${categoryId}"]`).classList.add('active');
             
+            // Filtrar productos
             filterProductsByCategory(categoryId);
         }
 
@@ -1491,6 +2078,190 @@
             });
         }
 
+        // Funciones para la bolsa de compra
+        function addToBag(productId, quantity = 1) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const existingItem = shoppingBag.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                shoppingBag.push({
+                    id: productId,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    telegram: product.telegram,
+                    quantity: quantity
+                });
+            }
+            
+            saveBag();
+            updateBagCount();
+        }
+
+        function removeFromBag(productId) {
+            shoppingBag = shoppingBag.filter(item => item.id !== productId);
+            saveBag();
+            updateBagCount();
+            updateBagModal();
+        }
+
+        function updateItemQuantity(productId, newQuantity) {
+            const item = shoppingBag.find(item => item.id === productId);
+            if (item) {
+                item.quantity = Math.max(1, newQuantity);
+                saveBag();
+                updateBagModal();
+            }
+        }
+
+        function clearBag() {
+            shoppingBag = [];
+            saveBag();
+            updateBagCount();
+            updateBagModal();
+        }
+
+        function saveBag() {
+            localStorage.setItem('shoppingBag', JSON.stringify(shoppingBag));
+        }
+
+        function updateBagCount() {
+            const totalItems = shoppingBag.reduce((total, item) => total + item.quantity, 0);
+            elements.bagCount.textContent = totalItems;
+            elements.bagCount.style.display = totalItems > 0 ? 'flex' : 'none';
+        }
+
+        function openBagModal() {
+            updateBagModal();
+            elements.bagModal.style.display = 'flex';
+            setTimeout(() => {
+                elements.bagModal.classList.add('show');
+            }, 10);
+        }
+
+        function closeBagModal() {
+            elements.bagModal.classList.remove('show');
+            setTimeout(() => {
+                elements.bagModal.style.display = 'none';
+            }, 300);
+        }
+
+        function updateBagModal() {
+            if (shoppingBag.length === 0) {
+                elements.bagModalBody.innerHTML = `
+                    <div class="bag-empty">
+                        <i class="fas fa-shopping-bag"></i>
+                        <p>Tu bolsa está vacía</p>
+                    </div>
+                `;
+                elements.bagModalFooter.style.display = 'none';
+                return;
+            }
+
+            let itemsHtml = '';
+            let total = 0;
+            
+            shoppingBag.forEach(item => {
+                const subtotal = item.price * item.quantity;
+                total += subtotal;
+                
+                itemsHtml += `
+                    <div class="bag-item" data-id="${item.id}">
+                        <img src="${item.image || 'https://via.placeholder.com/60x60/F8F9FA/CCCCCC?text=No+imagen'}" class="bag-item-image" alt="${item.name}">
+                        <div class="bag-item-info">
+                            <div class="bag-item-name">${item.name}</div>
+                            <div class="bag-item-price">CUP ${item.price.toFixed(2)} c/u</div>
+                            <div class="bag-item-quantity">
+                                <button class="bag-item-quantity-btn minus">-</button>
+                                <span class="bag-item-quantity-value">${item.quantity}</span>
+                                <button class="bag-item-quantity-btn plus">+</button>
+                                <span class="bag-item-remove"><i class="fas fa-trash"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            elements.bagModalBody.innerHTML = itemsHtml;
+            elements.bagTotalValue.textContent = `CUP ${total.toFixed(2)}`;
+            elements.bagModalFooter.style.display = 'block';
+
+            // Agregar event listeners a los botones de cantidad y eliminar
+            document.querySelectorAll('.bag-item-quantity-btn.minus').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const itemElement = e.target.closest('.bag-item');
+                    const itemId = itemElement.dataset.id;
+                    const item = shoppingBag.find(item => item.id === itemId);
+                    if (item) {
+                        updateItemQuantity(itemId, item.quantity - 1);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.bag-item-quantity-btn.plus').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const itemElement = e.target.closest('.bag-item');
+                    const itemId = itemElement.dataset.id;
+                    const item = shoppingBag.find(item => item.id === itemId);
+                    if (item) {
+                        updateItemQuantity(itemId, item.quantity + 1);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.bag-item-remove').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const itemElement = e.target.closest('.bag-item');
+                    const itemId = itemElement.dataset.id;
+                    removeFromBag(itemId);
+                });
+            });
+        }
+
+        function checkoutBag() {
+            if (shoppingBag.length === 0) return;
+
+            // Agrupar productos por vendedor
+            const sellers = {};
+            
+            shoppingBag.forEach(item => {
+                const seller = item.telegram || telegramUsername;
+                if (!sellers[seller]) {
+                    sellers[seller] = [];
+                }
+                sellers[seller].push(item);
+            });
+
+            // Crear mensajes para cada vendedor
+            for (const [seller, items] of Object.entries(sellers)) {
+                let message = `¡Hola! Estoy interesado en comprar los siguientes productos:\n\n`;
+                let total = 0;
+                
+                items.forEach(item => {
+                    const subtotal = item.price * item.quantity;
+                    total += subtotal;
+                    message += `- ${item.name}\n`;
+                    message += `  Cantidad: ${item.quantity}\n`;
+                    message += `  Precio unitario: CUP ${item.price.toFixed(2)}\n`;
+                    message += `  Subtotal: CUP ${subtotal.toFixed(2)}\n\n`;
+                });
+
+                message += `Total: CUP ${total.toFixed(2)}\n\n`;
+                message += `¿Podrías ayudarme con esta compra?`;
+
+                const telegramUser = seller.replace('@', '');
+                window.open(`https://t.me/${telegramUser}?text=${encodeURIComponent(message)}`, '_blank');
+            }
+
+            // Limpiar la bolsa después de enviar
+            clearBag();
+            closeBagModal();
+        }
+
         function setupEventListeners() {
             // Menú toggle
             elements.menuToggle.addEventListener('click', toggleSideMenu);
@@ -1503,6 +2274,20 @@
                 window.open(`https://t.me/${telegramUsername}?text=${encodeURIComponent(message)}`, '_blank');
                 closeSideMenu();
             });
+
+            // Botón de vendedor del menú
+            elements.sellerMenuBtn.addEventListener('click', () => {
+                window.open(sellerRegistrationUrl, '_blank');
+                closeSideMenu();
+            });
+
+            // Botón de vendedor principal
+            elements.sellerBtn.addEventListener('click', () => {
+                window.open(sellerRegistrationUrl, '_blank');
+            });
+
+            // Botón "Ver todas las categorías"
+            elements.viewAllCategories.addEventListener('click', toggleSideMenu);
 
             // Botón de Telegram flotante
             elements.supportTelegram.addEventListener('click', () => {
@@ -1564,11 +2349,27 @@
             elements.searchInput.addEventListener('input', handleSearchInput);
             elements.searchClear.addEventListener('click', clearSearch);
 
+            // Bolsa de compra
+            elements.bagBtn.addEventListener('click', openBagModal);
+            elements.bagModalClose.addEventListener('click', closeBagModal);
+            elements.bagModal.addEventListener('click', (e) => {
+                if (e.target === elements.bagModal) {
+                    closeBagModal();
+                }
+            });
+            elements.bagClearBtn.addEventListener('click', clearBag);
+            elements.bagCheckoutBtn.addEventListener('click', checkoutBag);
+
             // Event delegation para botones dinámicos
             document.addEventListener('click', (e) => {
-                // Botón de compra
+                // Botón de compra ahora
                 if (e.target.classList.contains('buy-now') || e.target.closest('.buy-now')) {
                     handleBuyNowClick(e);
+                }
+                
+                // Botón de añadir a la bolsa
+                if (e.target.classList.contains('add-to-bag-btn') || e.target.closest('.add-to-bag-btn')) {
+                    handleAddToBagClick(e);
                 }
                 
                 // Botones de cantidad
@@ -1642,6 +2443,26 @@
                 
                 window.open(`https://t.me/${telegramUser}?text=${encodeURIComponent(message)}`, '_blank');
             }
+        }
+
+        function handleAddToBagClick(e) {
+            const productElement = e.target.closest('.product-item');
+            const productId = productElement.dataset.id;
+            const quantity = parseInt(productElement.querySelector('.quantity').textContent);
+            
+            addToBag(productId, quantity);
+            
+            // Efecto visual de confirmación
+            const btn = e.target.classList.contains('add-to-bag-btn') ? e.target : e.target.closest('.add-to-bag-btn');
+            btn.innerHTML = '<i class="fas fa-check" style="margin-right: 8px;"></i> Añadido';
+            btn.style.backgroundColor = '#4CAF50';
+            btn.style.borderColor = '#4CAF50';
+            
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-shopping-bag" style="margin-right: 8px;"></i> Añadir a la bolsa';
+                btn.style.backgroundColor = '';
+                btn.style.borderColor = '';
+            }, 2000);
         }
 
         function handleQuantityChange(e, change) {
@@ -1784,7 +2605,7 @@
 
         function setupRippleEffect() {
             document.addEventListener('click', function(e) {
-                const target = e.target.closest('.telegram-btn, .quantity-btn, .menu-toggle, .search-toggle, .footer-item');
+                const target = e.target.closest('.telegram-btn, .quantity-btn, .menu-toggle, .search-toggle, .footer-item, .seller-btn, .add-to-bag-btn, .category-card');
                 if (target) {
                     const rect = target.getBoundingClientRect();
                     const x = e.clientX - rect.left;
