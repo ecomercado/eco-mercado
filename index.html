@@ -4,32 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Venta por todo Cuba - Lo mejor en tecnología</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --primary-color: #000000; /* Cambiado de #0066CC a #000000 */
-            --primary-dark: #000000; /* Cambiado de #004D99 a #000000 */
-            --primary-light: #333333; /* Cambiado de #3385FF a #333333 */
-            --accent-color: #FF6600;
-            --text-color: #333333;
-            --text-light: #666666;
-            --bg-color: #FFFFFF;
-            --card-bg: #F8F9FA;
+            --primary-color: #10B981; /* Verde moderno */
+            --primary-dark: #059669; /* Tono más oscuro */
+            --primary-light: #6EE7B7; /* Tono más claro */
+            --primary-extra-light: #D1FAE5; /* Tono muy claro */
+            --accent-color: #10B981; /* Mismo que primary para consistencia */
+            --text-color: #1F2937; /* Gris oscuro para texto */
+            --text-light: #6B7280; /* Gris medio */
+            --bg-color: #ECFDF5; /* Fondo verde muy claro */
+            --card-bg: #FFFFFF;
             --header-bg: #FFFFFF;
             --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-green: 0 4px 20px rgba(16, 185, 129, 0.2); /* Sombra verde */
             --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            --font-size-small: 0.9rem;
-            --font-size-medium: 1rem;
-            --font-size-large: 1.2rem;
-            --border-color: #E0E0E0;
+            --font-size-small: 0.8rem;
+            --font-size-medium: 0.9rem;
+            --font-size-large: 1.1rem;
+            --border-color: #E5E7EB;
+            --modal-bg: rgba(0, 0, 0, 0.7);
+            --modal-content-bg: #FFFFFF;
+            --modal-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --error-color: #EF4444;
+            --info-color: #3B82F6;
+            --blur-effect: blur(8px); /* Efecto blur */
+            --blur-bg: rgba(255, 255, 255, 0.8); /* Fondo para elementos con blur */
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
         
         body {
@@ -57,6 +68,8 @@
             align-items: center;
             box-shadow: var(--shadow);
             border-bottom: 1px solid var(--border-color);
+            backdrop-filter: var(--blur-effect); /* Efecto blur en el header */
+            background-color: var(--blur-bg); /* Fondo semi-transparente */
         }
         
         .header-left {
@@ -67,10 +80,14 @@
         
         .logo-text {
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--primary-color);
             text-transform: uppercase;
             letter-spacing: 1px;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .menu-toggle {
@@ -157,6 +174,7 @@
             align-items: center;
             justify-content: center;
             transition: var(--transition);
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
         }
         
         .banner-prev:hover, .banner-next:hover {
@@ -190,13 +208,14 @@
             background-color: rgba(255, 255, 255, 0.5);
             cursor: pointer;
             transition: var(--transition);
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
         }
         
         .banner-dot.active {
             background-color: var(--primary-color);
         }
         
-        .province-selector {
+        .location-selector {
             padding: 15px;
             background: var(--header-bg);
             border-bottom: 1px solid var(--border-color);
@@ -207,9 +226,11 @@
             align-items: center;
             justify-content: space-between;
             gap: 10px;
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
+            background-color: var(--blur-bg); /* Fondo semi-transparente */
         }
         
-        .province-selector select {
+        .location-selector select {
             flex: 1;
             padding: 10px 15px;
             border: 2px solid var(--primary-color);
@@ -224,16 +245,16 @@
             background-position: right 12px center;
             background-size: 18px;
             transition: var(--transition);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Cambiado el color de la sombra */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         
-        .province-selector select:focus {
+        .location-selector select:focus {
             outline: none;
             border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.2);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
         }
         
-        .province-badge {
+        .location-badge {
             position: absolute;
             right: 30px;
             background-color: var(--accent-color);
@@ -244,10 +265,11 @@
             font-weight: 500;
             margin-left: 8px;
             display: none;
-            box-shadow: 0 2px 5px rgba(255, 102, 0, 0.2);
+            box-shadow: var(--shadow-green);
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
         }
         
-        .province-badge.show {
+        .location-badge.show {
             display: inline-block;
         }
         
@@ -262,6 +284,8 @@
             z-index: 300;
             transition: left 0.3s ease-out;
             overflow-y: auto;
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
+            background-color: var(--blur-bg); /* Fondo semi-transparente */
         }
         
         .side-menu.open {
@@ -279,6 +303,8 @@
             top: 0;
             z-index: 1;
             border-bottom: 1px solid var(--border-color);
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
+            background-color: var(--blur-bg); /* Fondo semi-transparente */
         }
         
         .close-menu {
@@ -309,12 +335,12 @@
         }
         
         .menu-category:hover {
-            background-color: rgba(0, 0, 0, 0.05); /* Cambiado el color del hover */
+            background-color: rgba(0, 0, 0, 0.05);
             color: var(--primary-color);
         }
         
         .menu-category.active {
-            background-color: rgba(0, 0, 0, 0.1); /* Cambiado el color del activo */
+            background-color: rgba(0, 0, 0, 0.1);
             color: var(--primary-color);
             font-weight: 500;
             border-left: 3px solid var(--primary-color);
@@ -337,6 +363,8 @@
             z-index: 400;
             box-shadow: 0 2px 15px rgba(0,0,0,0.1);
             border-bottom: 1px solid var(--border-color);
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
+            background-color: var(--blur-bg); /* Fondo semi-transparente */
         }
         
         .search-bar.active {
@@ -373,13 +401,13 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             transition: var(--transition);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Cambiado el color de la sombra */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         
         .search-input:focus {
             outline: none;
             border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.2);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
         }
         
         .search-clear {
@@ -411,6 +439,8 @@
             z-index: 399;
             overflow-y: auto;
             padding: 12px;
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
+            background-color: var(--blur-bg); /* Fondo semi-transparente */
         }
         
         .search-results.active {
@@ -425,10 +455,12 @@
             display: flex;
             align-items: center;
             transition: var(--transition);
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
+            background-color: var(--blur-bg); /* Fondo semi-transparente */
         }
         
         .search-result-item:hover {
-            background-color: rgba(0, 0, 0, 0.05); /* Cambiado el color del hover */
+            background-color: rgba(0, 0, 0, 0.05);
             transform: translateX(5px);
         }
         
@@ -454,7 +486,7 @@
         
         .search-result-price {
             font-size: var(--font-size-small);
-            color: var(--primary-color);
+            color: #EF4444;
             font-weight: 700;
         }
         
@@ -485,33 +517,44 @@
             margin-bottom: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             border-bottom: 1px solid var(--border-color);
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, var(--header-bg), #f5f5f5);
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
         }
         
+        /* Product Grid - Modified for compact layout */
         .product-list {
             padding: 8px 4px;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
+            gap: 6px;
+        }
+        
+        @media (min-width: 500px) {
+            .product-list {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
         
         @media (min-width: 768px) {
             .product-list {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 12px;
-                padding: 8px 12px;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 8px;
             }
         }
         
         @media (min-width: 1024px) {
             .product-list {
-                grid-template-columns: repeat(4, 1fr);
+                grid-template-columns: repeat(5, 1fr);
             }
         }
         
         .product-item {
             background-color: var(--card-bg);
-            border-radius: 8px;
-            padding: 12px;
+            border-radius: 6px;
+            padding: 8px;
             box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
@@ -528,10 +571,10 @@
         
         .product-image {
             width: 100%;
-            height: 120px;
+            height: 100px;
             object-fit: contain;
-            margin-bottom: 8px;
-            border-radius: 8px;
+            margin-bottom: 6px;
+            border-radius: 4px;
             cursor: pointer;
             transition: var(--transition);
             background-color: #FFFFFF;
@@ -555,13 +598,13 @@
         
         .product-brand {
             font-weight: 700;
-            font-size: var(--font-size-small);
+            font-size: 0.7rem;
             color: var(--primary-color);
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
         
         .product-name {
-            font-size: var(--font-size-small);
+            font-size: 0.7rem;
             margin-bottom: 4px;
             flex-grow: 1;
             display: -webkit-box;
@@ -569,7 +612,7 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
-            min-height: 2.4em;
+            min-height: 2.2em;
             color: var(--text-color);
         }
         
@@ -623,21 +666,21 @@
         
         .current-price {
             font-weight: 700;
-            font-size: var(--font-size-medium);
-            color: var(--primary-color);
+            font-size: 0.9rem;
+            color: #EF4444;
         }
         
         .old-price {
-            font-size: var(--font-size-small);
+            font-size: 0.7rem;
             color: #777;
             text-decoration: line-through;
-            margin-left: 8px;
+            margin-left: 4px;
         }
         
         .product-stock {
-            font-size: 0.8rem;
-            color: #4CAF50;
-            margin-top: 4px;
+            font-size: 0.7rem;
+            color: var(--primary-color);
+            margin-top: 2px;
         }
         
         .product-features {
@@ -689,12 +732,12 @@
         }
         
         .quantity-btn {
-            width: 26px;
-            height: 26px;
+            width: 22px;
+            height: 22px;
             background-color: #E0E0E0;
             border: none;
             border-radius: 4px;
-            font-size: 14px;
+            font-size: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -719,8 +762,8 @@
             color: white;
             border: 1px solid var(--accent-color);
             border-radius: 5px;
-            padding: 8px 10px;
-            font-size: 0.8rem;
+            padding: 6px 8px;
+            font-size: 0.7rem;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -729,7 +772,7 @@
         }
         
         .telegram-btn:hover {
-            background: #E55C00;
+            background: var(--primary-dark);
             transform: translateY(-2px);
         }
         
@@ -741,68 +784,118 @@
             margin-bottom: 12px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             border-bottom: 1px solid var(--primary-color);
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
+            background-color: var(--blur-bg); /* Fondo semi-transparente */
         }
         
         .banner h2 {
             font-size: clamp(1rem, 4vw, 1.2rem);
             margin-bottom: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
         }
         
         .banner p {
             font-size: 0.8rem;
         }
         
-        footer {
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 0;
-            background-color: var(--header-bg);
+        /* Floating Navigation - Modified to remove offers button */
+        .floating-nav {
             position: fixed;
-            bottom: 0;
-            width: 100%;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            z-index: 100;
-            border-top: 1px solid var(--border-color);
-        }
-        
-        .footer-item {
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--header-bg);
+            border-radius: 50px;
+            padding: 6px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
             display: flex;
-            flex-direction: column;
+            z-index: 200;
+            border: 1px solid var(--border-color);
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
+            background-color: var(--blur-bg); /* Fondo semi-transparente */
+        }
+        
+        .floating-nav-item {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
             align-items: center;
-            font-size: 0.7rem;
-            color: var(--text-light);
+            justify-content: center;
+            margin: 0 5px;
             cursor: pointer;
-            padding: 4px;
-            flex: 1;
-            max-width: 33.33%;
             transition: var(--transition);
+            position: relative;
+            background: var(--card-bg);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
         
-        .footer-item i {
+        .floating-nav-item:hover {
+            transform: translateY(-5px);
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .floating-nav-item i {
             font-size: 1.2rem;
-            margin-bottom: 2px;
             color: var(--primary-color);
             transition: var(--transition);
         }
         
-        .footer-item.active {
-            color: var(--primary-color);
-            font-weight: 500;
+        .floating-nav-item:hover i {
+            color: white;
         }
         
-        .footer-item.active i {
-            color: var(--primary-color);
-            transform: scale(1.1);
+        .floating-nav-item.active {
+            background: var(--primary-color);
         }
         
-        .footer-item:hover {
-            color: var(--primary-color);
+        .floating-nav-item.active i {
+            color: white;
         }
         
-        .footer-item:hover i {
-            color: var(--accent-color);
+        .floating-nav-item .tooltip {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.7rem;
+            opacity: 0;
+            transition: var(--transition);
+            pointer-events: none;
+            white-space: nowrap;
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
         }
         
+        .floating-nav-item:hover .tooltip {
+            opacity: 1;
+            top: -35px;
+        }
+        
+        /* 3D Icons */
+        .icon-3d {
+            position: relative;
+            display: inline-block;
+            transform-style: preserve-3d;
+            transition: all 0.3s ease;
+        }
+        
+        .icon-3d i {
+            display: inline-block;
+            transform: translateZ(15px);
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .floating-nav-item:hover .icon-3d {
+            transform: rotateY(15deg) rotateX(15deg);
+        }
+        
+        /* Image Modal */
         .image-modal {
             display: none;
             position: fixed;
@@ -816,6 +909,7 @@
             align-items: center;
             opacity: 0;
             transition: opacity 0.3s ease;
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
         }
         
         .image-modal.show {
@@ -875,18 +969,19 @@
             justify-content: center;
             cursor: pointer;
             transition: var(--transition);
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
         }
         
         .image-modal-btn:hover {
             transform: scale(1.1);
-            background-color: #E55C00;
+            background-color: var(--primary-dark);
         }
         
-        .support-telegram {
+        .support-email {
             position: fixed;
             bottom: 60px;
             right: 15px;
-            background: var(--accent-color);
+            background: var(--primary-color);
             color: white;
             width: 55px;
             height: 55px;
@@ -895,12 +990,14 @@
             align-items: center;
             justify-content: center;
             font-size: 26px;
-            box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
             z-index: 100;
             cursor: pointer;
             transition: var(--transition);
             animation: pulse 2s infinite;
-            border: 1px solid var(--accent-color);
+            border: 1px solid var(--primary-dark);
+            text-decoration: none;
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
         }
         
         @keyframes pulse {
@@ -909,10 +1006,11 @@
             100% { transform: scale(1); }
         }
         
-        .support-telegram:hover {
+        .support-email:hover {
             transform: scale(1.1) rotate(5deg);
             animation: none;
-            box-shadow: 0 6px 20px rgba(255, 102, 0, 0.4);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+            background: var(--primary-dark);
         }
         
         .overlay {
@@ -949,7 +1047,7 @@
         .ripple {
             position: absolute;
             border-radius: 50%;
-            background-color: rgba(0, 0, 0, 0.3); /* Cambiado el color del ripple */
+            background-color: rgba(0, 0, 0, 0.3);
             transform: scale(0);
             animation: ripple 0.6s linear;
             pointer-events: none;
@@ -962,7 +1060,7 @@
             }
         }
 
-        /* Estilos para el vendedor de Telegram */
+        /* Seller Telegram */
         .seller-telegram {
             margin-top: 8px;
             font-size: 0.8rem;
@@ -988,7 +1086,7 @@
             color: #0088cc;
         }
 
-        /* Nuevos estilos para el botón de vendedor */
+        /* Seller Button */
         .seller-btn-container {
             display: flex;
             justify-content: center;
@@ -1008,20 +1106,21 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Cambiado el color de la sombra */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
         }
 
         .seller-btn:hover {
             background-color: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Cambiado el color de la sombra */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
 
         .seller-btn i {
             font-size: 1.1rem;
         }
 
-        /* Estilos para la bolsa de compra */
+        /* Shopping Bag */
         .bag-btn {
             position: fixed;
             bottom: 60px;
@@ -1035,17 +1134,18 @@
             align-items: center;
             justify-content: center;
             font-size: 22px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Cambiado el color de la sombra */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             z-index: 100;
             cursor: pointer;
             transition: var(--transition);
             border: 1px solid var(--primary-color);
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
         }
 
         .bag-btn:hover {
             transform: scale(1.1);
             background: var(--primary-dark);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); /* Cambiado el color de la sombra */
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
         }
 
         .bag-count {
@@ -1064,7 +1164,7 @@
             font-weight: bold;
         }
 
-        /* Modal de la bolsa */
+        /* Bag Modal */
         .bag-modal {
             display: none;
             position: fixed;
@@ -1078,6 +1178,7 @@
             align-items: center;
             opacity: 0;
             transition: opacity 0.3s ease;
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
         }
 
         .bag-modal.show {
@@ -1166,7 +1267,7 @@
 
         .bag-item-price {
             font-size: 0.9rem;
-            color: var(--primary-color);
+            color: #EF4444;
             font-weight: bold;
             margin-bottom: 5px;
         }
@@ -1241,7 +1342,7 @@
         }
 
         .bag-total-value {
-            color: var(--primary-color);
+            color: #EF4444;
         }
 
         .bag-actions {
@@ -1282,7 +1383,7 @@
         }
 
         .bag-checkout-btn:hover {
-            background: #e55c00;
+            background: var(--primary-dark);
         }
 
         .bag-checkout-btn i {
@@ -1294,8 +1395,8 @@
             color: white;
             border: 1px solid var(--primary-color);
             border-radius: 5px;
-            padding: 8px 10px;
-            font-size: 0.8rem;
+            padding: 6px 8px;
+            font-size: 0.7rem;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -1312,11 +1413,11 @@
         .product-purchase-buttons {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin-top: 12px;
+            gap: 6px;
+            margin-top: 8px;
         }
 
-        /* Nuevos estilos para las categorías en la pantalla principal */
+        /* Categories */
         .categories-container {
             padding: 15px;
             background: var(--bg-color);
@@ -1383,11 +1484,11 @@
         .category-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-            background: rgba(0, 0, 0, 0.05); /* Cambiado el color del hover */
+            background: rgba(0, 0, 0, 0.05);
         }
 
         .category-card.active {
-            background: rgba(0, 0, 0, 0.1); /* Cambiado el color del activo */
+            background: rgba(0, 0, 0, 0.1);
             border: 1px solid var(--primary-color);
         }
 
@@ -1416,7 +1517,7 @@
             width: 100%;
         }
 
-        /* Estilo para el botón de ver todas las categorías */
+        /* View All Categories */
         .view-all-categories {
             grid-column: 1 / -1;
             background: var(--primary-light);
@@ -1446,6 +1547,170 @@
             font-size: 0.8rem;
             font-weight: 500;
         }
+
+        /* Dialogs */
+        .dialog-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--modal-bg);
+            z-index: 500;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
+        }
+
+        .dialog-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .dialog {
+            background-color: var(--modal-content-bg);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: var(--modal-shadow);
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
+            background-color: var(--blur-bg); /* Fondo semi-transparente */
+        }
+
+        .dialog-overlay.show .dialog {
+            transform: scale(1);
+        }
+
+        .dialog-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dialog-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .dialog-close {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .dialog-close:hover {
+            color: var(--primary-color);
+            transform: rotate(90deg);
+        }
+
+        .dialog-body {
+            padding: 16px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .dialog-footer {
+            padding: 16px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .dialog-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            backdrop-filter: var(--blur-effect); /* Efecto blur */
+        }
+
+        .dialog-btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .dialog-btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .dialog-btn-secondary {
+            background-color: #f0f0f0;
+            color: var(--text-color);
+        }
+
+        .dialog-btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Municipality Selector */
+        .municipality-selector {
+            margin-top: 15px;
+        }
+
+        .municipality-selector label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        .municipality-selector select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: var(--font-size-medium);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+
+        .municipality-selector select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Confirmation Message */
+        .confirmation-message {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .confirmation-icon {
+            font-size: 3rem;
+            color: var(--success-color);
+            margin-bottom: 15px;
+        }
+
+        .confirmation-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .confirmation-text {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -1459,11 +1724,10 @@
         <div class="menu-categories" id="menu-categories">
             <div class="loading">Cargando categorías...</div>
         </div>
-        <div class="menu-category" id="support-menu-btn">
-            <i class="fas fa-headset"></i>
-            <span>Soporte por Telegram</span>
-        </div>
-        <!-- Botón para vendedores en el menú -->
+        <a href="mailto:ocarmenate429@gmail.com" class="menu-category" id="support-menu-btn">
+            <i class="fas fa-envelope"></i>
+            <span>Soporte por Email</span>
+        </a>
         <div class="menu-category" id="seller-menu-btn">
             <i class="fas fa-store"></i>
             <span>Quiero vender</span>
@@ -1475,7 +1739,7 @@
             <div class="menu-toggle" id="menu-toggle">
                 <i class="fas fa-bars"></i>
             </div>
-            <div class="logo-text">VENTA POR TODO CUBA</div>
+            <div class="logo-text">MarketCUBA</div>
         </div>
         <div class="header-right">
             <div class="search-toggle" id="search-toggle">
@@ -1484,7 +1748,6 @@
         </div>
     </header>
     
-    <!-- Banner slider -->
     <div class="banner-slider" id="banner-slider">
         <div class="banner-slides" id="banner-slides">
             <div class="loading">Cargando banners...</div>
@@ -1494,8 +1757,7 @@
         <button class="banner-next" id="banner-next">&#10095;</button>
     </div>
     
-    <!-- Selector de provincia -->
-    <div class="province-selector">
+    <div class="location-selector">
         <select id="province-select">
             <option value="">Selecciona tu provincia</option>
             <option value="Pinar del Río">Pinar del Río</option>
@@ -1515,7 +1777,7 @@
             <option value="Guantánamo">Guantánamo</option>
             <option value="Isla de la Juventud">Isla de la Juventud</option>
         </select>
-        <span class="province-badge" id="province-badge"></span>
+        <span class="location-badge" id="location-badge"></span>
     </div>
     
     <div class="banner">
@@ -1523,7 +1785,6 @@
         <p>Los mejores precios y la mayor variedad de productos en toda Cuba. Envíos a todas las provincias.</p>
     </div>
 
-    <!-- Sección de categorías en la pantalla principal -->
     <div class="categories-container">
         <div class="categories-title">
             <span>Categorías</span>
@@ -1534,7 +1795,6 @@
         </div>
     </div>
 
-    <!-- Botón para vendedores -->
     <div class="seller-btn-container">
         <button class="seller-btn" id="seller-btn">
             <i class="fas fa-store"></i>
@@ -1557,40 +1817,41 @@
         </div>
     </div>
     
-    <!-- Sección de productos -->
     <div class="section-title">Productos destacados</div>
     <div class="product-list" id="product-list">
         <div class="loading">Cargando productos...</div>
     </div>
     
-    <!-- Botón de bolsa de compra -->
+    <div class="floating-nav">
+        <div class="floating-nav-item" id="floating-home">
+            <div class="icon-3d">
+                <i class="fas fa-home"></i>
+            </div>
+            <span class="tooltip">Inicio</span>
+        </div>
+        <div class="floating-nav-item" id="floating-categories">
+            <div class="icon-3d">
+                <i class="fas fa-list"></i>
+            </div>
+            <span class="tooltip">Categorías</span>
+        </div>
+        <div class="floating-nav-item active" id="floating-cart">
+            <div class="icon-3d">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <span class="tooltip">Carrito</span>
+        </div>
+    </div>
+    
     <div class="bag-btn" id="bag-btn">
         <i class="fas fa-shopping-bag"></i>
         <span class="bag-count" id="bag-count">0</span>
     </div>
     
-    <!-- Botón de Telegram -->
-    <div class="support-telegram" id="support-telegram">
-        <i class="fab fa-telegram"></i>
-    </div>
+    <a href="mailto:ocarmenate429@gmail.com" class="support-email" id="support-email">
+        <i class="fas fa-envelope"></i>
+    </a>
     
-    <!-- Footer -->
-    <footer>
-        <div class="footer-item active" id="home-btn">
-            <i class="fas fa-home"></i>
-            <span>Inicio</span>
-        </div>
-        <div class="footer-item" id="categories-btn">
-            <i class="fas fa-list"></i>
-            <span>Categorías</span>
-        </div>
-        <div class="footer-item" id="contact-btn">
-            <i class="fas fa-phone-alt"></i>
-            <span>Contacto</span>
-        </div>
-    </footer>
-    
-    <!-- Modal de imagen -->
     <div class="image-modal" id="image-modal">
         <span class="image-modal-close">&times;</span>
         <img class="image-modal-content" id="expanded-img">
@@ -1601,7 +1862,6 @@
         </div>
     </div>
 
-    <!-- Modal de la bolsa -->
     <div class="bag-modal" id="bag-modal">
         <div class="bag-modal-content">
             <div class="bag-modal-header">
@@ -1630,7 +1890,50 @@
         </div>
     </div>
 
-    <!-- Firebase -->
+    <div class="dialog-overlay" id="municipality-dialog">
+        <div class="dialog">
+            <div class="dialog-header">
+                <div class="dialog-title">Selecciona tu municipio</div>
+                <div class="dialog-close" id="municipality-dialog-close">&times;</div>
+            </div>
+            <div class="dialog-body" id="municipality-dialog-body">
+                <div class="municipality-selector">
+                    <label for="municipality-select">Municipio:</label>
+                    <select id="municipality-select">
+                        <option value="">Primero selecciona una provincia</option>
+                    </select>
+                </div>
+            </div>
+            <div class="dialog-footer">
+                <button class="dialog-btn dialog-btn-secondary" id="municipality-dialog-cancel">Cancelar</button>
+                <button class="dialog-btn dialog-btn-primary" id="municipality-dialog-confirm">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dialog-overlay" id="confirmation-dialog">
+        <div class="dialog">
+            <div class="dialog-header">
+                <div class="dialog-title">Ubicación guardada</div>
+                <div class="dialog-close" id="confirmation-dialog-close">&times;</div>
+            </div>
+            <div class="dialog-body">
+                <div class="confirmation-message">
+                    <div class="confirmation-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="confirmation-title">¡Ubicación guardada!</div>
+                    <div class="confirmation-text" id="confirmation-text">
+                        Hemos guardado tu ubicación para mostrarte productos disponibles en tu área.
+                    </div>
+                </div>
+            </div>
+            <div class="dialog-footer">
+                <button class="dialog-btn dialog-btn-primary" id="confirmation-dialog-ok">Aceptar</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -1655,12 +1958,30 @@
         let categories = [];
         let currentSlide = 0;
         let slideInterval;
-        const telegramUsername = "tiendavende"; // Usuario de Telegram para soporte
-        const sellerRegistrationUrl = "https://ecomercado.github.io/Vendedor-/"; // URL para registro de vendedores
+        const telegramUsername = "tiendavende";
+        const sellerRegistrationUrl = "https://ecomercado.github.io/Vendedor-/";
         
-        // Bolsa de compra
         let shoppingBag = JSON.parse(localStorage.getItem('shoppingBag')) || [];
         
+        const municipalitiesByProvince = {
+            "Pinar del Río": ["Consolación del Sur", "Guane", "La Palma", "Los Palacios", "Mantua", "Minas de Matahambre", "Pinar del Río", "San Juan y Martínez", "San Luis", "Sandino", "Viñales"],
+            "Artemisa": ["Alquízar", "Artemisa", "Bahía Honda", "Bauta", "Caimito", "Candelaria", "Guanajay", "Güira de Melena", "Mariel", "San Antonio de los Baños", "San Cristóbal"],
+            "La Habana": ["Arroyo Naranjo", "Boyeros", "Centro Habana", "Cerro", "Cotorro", "Diez de Octubre", "Guanabacoa", "La Habana del Este", "La Habana Vieja", "La Lisa", "Marianao", "Playa", "Plaza de la Revolución", "Regla", "San Miguel del Padrón"],
+            "Mayabeque": ["Batabanó", "Bejucal", "Güines", "Jaruco", "Madruga", "Melena del Sur", "Nueva Paz", "Quivicán", "San José de las Lajas", "San Nicolás de Bari", "Santa Cruz del Norte"],
+            "Matanzas": ["Calimete", "Cárdenas", "Ciudad de Matanzas", "Colón", "Jagüey Grande", "Jovellanos", "Limonar", "Los Arabos", "Martí", "Pedro Betancourt", "Perico", "Unión de Reyes", "Varadero"],
+            "Cienfuegos": ["Abreus", "Aguada de Pasajeros", "Cienfuegos", "Cruces", "Cumanayagua", "Lajas", "Palmira", "Rodas"],
+            "Villa Clara": ["Caibarién", "Camajuaní", "Cifuentes", "Corralillo", "Encrucijada", "Manicaragua", "Placetas", "Quemado de Güines", "Ranchuelo", "Remedios", "Sagua la Grande", "Santa Clara", "Santo Domingo"],
+            "Sancti Spíritus": ["Cabaiguán", "Fomento", "Jatibonico", "La Sierpe", "Sancti Spíritus", "Taguasco", "Trinidad", "Yaguajay"],
+            "Ciego de Ávila": ["Baraguá", "Bolivia", "Chambas", "Ciego de Ávila", "Ciro Redondo", "Florencia", "Majagua", "Morón", "Primero de Enero", "Venezuela"],
+            "Camagüey": ["Camagüey", "Carlos M. de Céspedes", "Esmeralda", "Florida", "Guáimaro", "Jimaguayú", "Minas", "Najasa", "Nuevitas", "Santa Cruz del Sur", "Sibanicú", "Sierra de Cubitas", "Vertientes"],
+            "Las Tunas": ["Amancio", "Colombia", "Jesús Menéndez", "Jobabo", "Las Tunas", "Majibacoa", "Manatí", "Puerto Padre"],
+            "Holguín": ["Antilla", "Báguanos", "Banes", "Cacocum", "Calixto García", "Cueto", "Frank País", "Gibara", "Holguín", "Mayarí", "Moa", "Rafael Freyre", "Sagua de Tánamo", "Urbano Noris"],
+            "Granma": ["Bartolomé Masó", "Bayamo", "Buey Arriba", "Campechuela", "Cauto Cristo", "Guisa", "Jiguaní", "Manzanillo", "Media Luna", "Niquero", "Pilón", "Río Cauto", "Yara"],
+            "Santiago de Cuba": ["Contramaestre", "Guamá", "Mella", "Palma Soriano", "San Luis", "Santiago de Cuba", "Segundo Frente", "Songo-La Maya", "Tercer Frente"],
+            "Guantánamo": ["Baracoa", "Caimanera", "El Salvador", "Guantánamo", "Imías", "Maisí", "Manuel Tames", "Niceto Pérez", "San Antonio del Sur", "Yateras"],
+            "Isla de la Juventud": ["Isla de la Juventud"]
+        };
+
         const elements = {
             menuToggle: document.getElementById('menu-toggle'),
             sideMenu: document.getElementById('side-menu'),
@@ -1672,10 +1993,7 @@
             bannerNext: document.getElementById('banner-next'),
             productList: document.getElementById('product-list'),
             menuCategories: document.getElementById('menu-categories'),
-            supportTelegram: document.getElementById('support-telegram'),
-            homeBtn: document.getElementById('home-btn'),
-            categoriesBtn: document.getElementById('categories-btn'),
-            contactBtn: document.getElementById('contact-btn'),
+            supportEmail: document.getElementById('support-email'),
             imageModal: document.getElementById('image-modal'),
             expandedImg: document.getElementById('expanded-img'),
             imageModalClose: document.querySelector('.image-modal-close'),
@@ -1687,7 +2005,7 @@
             searchResults: document.getElementById('search-results'),
             searchBack: document.getElementById('search-back'),
             provinceSelect: document.getElementById('province-select'),
-            provinceBadge: document.getElementById('province-badge'),
+            locationBadge: document.getElementById('location-badge'),
             sellerBtn: document.getElementById('seller-btn'),
             sellerMenuBtn: document.getElementById('seller-menu-btn'),
             bagBtn: document.getElementById('bag-btn'),
@@ -1700,7 +2018,19 @@
             bagClearBtn: document.getElementById('bag-clear-btn'),
             bagCheckoutBtn: document.getElementById('bag-checkout-btn'),
             categoriesGrid: document.getElementById('categories-grid'),
-            viewAllCategories: document.getElementById('view-all-categories')
+            viewAllCategories: document.getElementById('view-all-categories'),
+            municipalityDialog: document.getElementById('municipality-dialog'),
+            municipalitySelect: document.getElementById('municipality-select'),
+            municipalityDialogClose: document.getElementById('municipality-dialog-close'),
+            municipalityDialogCancel: document.getElementById('municipality-dialog-cancel'),
+            municipalityDialogConfirm: document.getElementById('municipality-dialog-confirm'),
+            confirmationDialog: document.getElementById('confirmation-dialog'),
+            confirmationDialogClose: document.getElementById('confirmation-dialog-close'),
+            confirmationDialogOk: document.getElementById('confirmation-dialog-ok'),
+            confirmationText: document.getElementById('confirmation-text'),
+            floatingHome: document.getElementById('floating-home'),
+            floatingCategories: document.getElementById('floating-categories'),
+            floatingCart: document.getElementById('floating-cart')
         };
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -1710,7 +2040,101 @@
             setupEventListeners();
             setupRippleEffect();
             updateBagCount();
+            initLocationSelection();
         });
+
+        function initLocationSelection() {
+            const savedLocation = JSON.parse(localStorage.getItem('selectedLocation'));
+            if (savedLocation) {
+                elements.provinceSelect.value = savedLocation.province;
+                updateLocationBadge(savedLocation.province, savedLocation.municipality);
+                filterProductsByLocation(savedLocation.province, savedLocation.municipality);
+            }
+            
+            elements.provinceSelect.addEventListener('change', function() {
+                const selectedProvince = this.value;
+                
+                if (selectedProvince) {
+                    showMunicipalityDialog(selectedProvince);
+                } else {
+                    localStorage.removeItem('selectedLocation');
+                    elements.locationBadge.classList.remove('show');
+                    showAllProducts();
+                }
+            });
+        }
+        
+        function showMunicipalityDialog(province) {
+            elements.municipalitySelect.innerHTML = '';
+            
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = 'Selecciona tu municipio';
+            elements.municipalitySelect.appendChild(defaultOption);
+            
+            const municipalities = municipalitiesByProvince[province] || [];
+            municipalities.forEach(municipality => {
+                const option = document.createElement('option');
+                option.value = municipality;
+                option.textContent = municipality;
+                elements.municipalitySelect.appendChild(option);
+            });
+            
+            elements.municipalityDialog.classList.add('show');
+        }
+        
+        function closeMunicipalityDialog() {
+            elements.municipalityDialog.classList.remove('show');
+        }
+        
+        function showConfirmationDialog(province, municipality) {
+            elements.confirmationText.textContent = `Hemos guardado tu ubicación: ${municipality}, ${province}. Mostraremos productos disponibles en tu área.`;
+            elements.confirmationDialog.classList.add('show');
+        }
+        
+        function closeConfirmationDialog() {
+            elements.confirmationDialog.classList.remove('show');
+        }
+        
+        function updateLocationBadge(province, municipality = null) {
+            if (municipality) {
+                elements.locationBadge.textContent = `${municipality}, ${province}`;
+            } else {
+                elements.locationBadge.textContent = province;
+            }
+            elements.locationBadge.classList.add('show');
+        }
+        
+        function filterProductsByLocation(province, municipality = null) {
+            const productElements = document.querySelectorAll('.product-item');
+            let hasProducts = false;
+            
+            productElements.forEach(element => {
+                const productProvince = element.dataset.province || 'Ciego de Ávila';
+                const productMunicipality = element.dataset.municipality || '';
+                
+                if (productProvince === province && (!municipality || productMunicipality === municipality)) {
+                    element.style.display = 'flex';
+                    hasProducts = true;
+                } else {
+                    element.style.display = 'none';
+                }
+            });
+            
+            if (!hasProducts) {
+                const locationText = municipality ? `${municipality}, ${province}` : province;
+                elements.productList.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 30px 20px; background: var(--card-bg); border-radius: 10px; margin: 10px; box-shadow: var(--shadow);">
+                        <i class="fas fa-map-marker-alt" style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 15px;"></i>
+                        <h3 style="margin-bottom: 10px; color: var(--primary-color);">No hay productos disponibles en ${locationText}</h3>
+                        <p style="margin-bottom: 20px; color: var(--text-light);">Prueba buscando en otra ubicación o revisa nuestro catálogo general</p>
+                        <button onclick="showAllProducts()" style="margin-top: 10px; padding: 10px 20px; background: var(--primary-color); color: white; border: none; border-radius: 25px; font-size: var(--font-size-medium); cursor: pointer; transition: var(--transition);">
+                            Mostrar todos los productos
+                        </button>
+                    </div>
+                `;
+            }
+        }
 
         function loadBanners() {
             db.collection("banners").where("active", "==", true).get()
@@ -1806,7 +2230,7 @@
                     products = [];
                     
                     if (querySnapshot.empty) {
-                        elements.productList.innerHTML = '<div class="empty">verifica su comexion a internet (USAR VPN )</div>';
+                        elements.productList.innerHTML = '<div class="empty">NO CUENTAS CON UNA CONEXION A INTERNET SEGURA,POR FAVOR CONETATE A UN VPN )</div>';
                         return;
                     }
 
@@ -1816,9 +2240,6 @@
                         const productElement = createProductElement(product);
                         elements.productList.appendChild(productElement);
                     });
-                    
-                    // Inicializar el selector de provincia
-                    initProvinceSelector();
                 })
                 .catch(error => {
                     console.error("Error loading products:", error);
@@ -1831,9 +2252,9 @@
             productElement.className = 'product-item';
             productElement.dataset.id = product.id;
             productElement.dataset.category = product.category || 'all';
-            productElement.dataset.province = product.province || 'Ciego de Ávila'; // Valor por defecto
+            productElement.dataset.province = product.province || 'Ciego de Ávila';
+            productElement.dataset.municipality = product.municipality || '';
             
-            // Descripción más larga de ejemplo si no viene definida
             const defaultDescription = `Este producto está disponible para envío a toda Cuba. Calidad garantizada y entrega rápida. ${product.name} es uno de nuestros productos más vendidos con excelentes comentarios de nuestros clientes. Puede contactar al vendedor directamente para más información sobre disponibilidad y formas de pago. Este producto incluye garantía de 6 meses y soporte técnico especializado. Realizamos envíos a todas las provincias con entrega en 3-5 días hábiles. Aceptamos múltiples formas de pago incluyendo transferencias y efectivo al recibir.`;
             
             let featuresHtml = '';
@@ -1851,7 +2272,6 @@
                 oldPriceHtml = `<span class="old-price">CUP ${product.oldPrice.toFixed(2)}</span>`;
             }
 
-            // Mostrar contacto del vendedor si está disponible
             let sellerContactHtml = '';
             if (product.telegram) {
                 const telegramUser = product.telegram.replace('@', '');
@@ -1892,84 +2312,6 @@
             return productElement;
         }
 
-        function initProvinceSelector() {
-            // Verificar si hay una provincia guardada en localStorage
-            const savedProvince = localStorage.getItem('selectedProvince');
-            if (savedProvince) {
-                elements.provinceSelect.value = savedProvince;
-                updateProvinceBadge(savedProvince);
-                filterProductsByProvince(savedProvince);
-            }
-            
-            // Manejar el cambio de provincia
-            elements.provinceSelect.addEventListener('change', function() {
-                const selectedProvince = this.value;
-                
-                if (selectedProvince) {
-                    // Guardar la selección en localStorage
-                    localStorage.setItem('selectedProvince', selectedProvince);
-                    
-                    // Actualizar el badge
-                    updateProvinceBadge(selectedProvince);
-                    
-                    // Filtrar productos
-                    filterProductsByProvince(selectedProvince);
-                } else {
-                    // Mostrar todos los productos si no hay provincia seleccionada
-                    localStorage.removeItem('selectedProvince');
-                    elements.provinceBadge.classList.remove('show');
-                    showAllProducts();
-                }
-            });
-        }
-        
-        function updateProvinceBadge(province) {
-            elements.provinceBadge.textContent = province;
-            elements.provinceBadge.classList.add('show');
-        }
-        
-        function filterProductsByProvince(province) {
-            const productElements = document.querySelectorAll('.product-item');
-            let hasProducts = false;
-            
-            productElements.forEach(element => {
-                const productProvince = element.dataset.province || 'Ciego de Ávila'; // Valor por defecto
-                
-                if (productProvince === province) {
-                    element.style.display = 'flex';
-                    hasProducts = true;
-                } else {
-                    element.style.display = 'none';
-                }
-            });
-            
-            // Mostrar mensaje si no hay productos en la provincia seleccionada
-            if (!hasProducts) {
-                elements.productList.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 30px 20px; background: var(--card-bg); border-radius: 10px; margin: 10px; box-shadow: var(--shadow);">
-                        <i class="fas fa-map-marker-alt" style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 15px;"></i>
-                        <h3 style="margin-bottom: 10px; color: var(--primary-color);">No hay productos disponibles en ${province}</h3>
-                        <p style="margin-bottom: 20px; color: var(--text-light);">Prueba buscando en otra provincia o revisa nuestro catálogo general</p>
-                        <button onclick="showAllProducts()" style="margin-top: 10px; padding: 10px 20px; background: var(--primary-color); color: white; border: none; border-radius: 25px; font-size: var(--font-size-medium); cursor: pointer; transition: var(--transition);">
-                            Mostrar todos los productos
-                        </button>
-                    </div>
-                `;
-            }
-        }
-        
-        function showAllProducts() {
-            const productElements = document.querySelectorAll('.product-item');
-            productElements.forEach(element => {
-                element.style.display = 'flex';
-            });
-            
-            // Resetear el selector
-            elements.provinceSelect.value = '';
-            elements.provinceBadge.classList.remove('show');
-            localStorage.removeItem('selectedProvince');
-        }
-
         function loadCategories() {
             db.collection("categories").orderBy("name").get()
                 .then(querySnapshot => {
@@ -1977,7 +2319,6 @@
                     elements.categoriesGrid.innerHTML = '';
                     categories = [];
                     
-                    // Crear categoría "Todos" para el menú lateral
                     const allCategory = document.createElement('div');
                     allCategory.className = 'menu-category active';
                     allCategory.dataset.category = 'all';
@@ -1985,7 +2326,6 @@
                     allCategory.addEventListener('click', filterByCategory);
                     elements.menuCategories.appendChild(allCategory);
                     
-                    // Crear categoría "Todos" para la pantalla principal
                     const allCategoryCard = document.createElement('div');
                     allCategoryCard.className = 'category-card active';
                     allCategoryCard.dataset.category = 'all';
@@ -2002,7 +2342,6 @@
                         const category = { id: doc.id, ...doc.data() };
                         categories.push(category);
                         
-                        // Crear elemento para el menú lateral
                         const categoryElement = document.createElement('div');
                         categoryElement.className = 'menu-category';
                         categoryElement.dataset.category = category.id;
@@ -2010,7 +2349,6 @@
                         categoryElement.addEventListener('click', filterByCategory);
                         elements.menuCategories.appendChild(categoryElement);
                         
-                        // Crear tarjeta para la pantalla principal
                         const categoryCard = document.createElement('div');
                         categoryCard.className = 'category-card';
                         categoryCard.dataset.category = category.id;
@@ -2024,7 +2362,6 @@
                         elements.categoriesGrid.appendChild(categoryCard);
                     });
 
-                    // Agregar botón "Ver todas" al final
                     const viewAllCard = document.createElement('div');
                     viewAllCard.className = 'view-all-categories';
                     viewAllCard.innerHTML = `
@@ -2045,19 +2382,16 @@
             const categoryItem = e.currentTarget;
             const categoryId = categoryItem.dataset.category;
             
-            // Actualizar estado activo en el menú lateral
             document.querySelectorAll('.menu-category').forEach(item => {
                 item.classList.remove('active');
             });
             document.querySelector(`.menu-category[data-category="${categoryId}"]`).classList.add('active');
             
-            // Actualizar estado activo en las tarjetas de categoría
             document.querySelectorAll('.category-card').forEach(item => {
                 item.classList.remove('active');
             });
             document.querySelector(`.category-card[data-category="${categoryId}"]`).classList.add('active');
             
-            // Filtrar productos
             filterProductsByCategory(categoryId);
         }
 
@@ -2078,7 +2412,6 @@
             });
         }
 
-        // Funciones para la bolsa de compra
         function addToBag(productId, quantity = 1) {
             const product = products.find(p => p.id === productId);
             if (!product) return;
@@ -2100,6 +2433,8 @@
             
             saveBag();
             updateBagCount();
+            
+            showConfirmationDialog('Producto añadido', `${product.name} ha sido añadido a tu bolsa de compra.`);
         }
 
         function removeFromBag(productId) {
@@ -2190,7 +2525,6 @@
             elements.bagTotalValue.textContent = `CUP ${total.toFixed(2)}`;
             elements.bagModalFooter.style.display = 'block';
 
-            // Agregar event listeners a los botones de cantidad y eliminar
             document.querySelectorAll('.bag-item-quantity-btn.minus').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const itemElement = e.target.closest('.bag-item');
@@ -2225,7 +2559,6 @@
         function checkoutBag() {
             if (shoppingBag.length === 0) return;
 
-            // Agrupar productos por vendedor
             const sellers = {};
             
             shoppingBag.forEach(item => {
@@ -2236,7 +2569,6 @@
                 sellers[seller].push(item);
             });
 
-            // Crear mensajes para cada vendedor
             for (const [seller, items] of Object.entries(sellers)) {
                 let message = `¡Hola! Estoy interesado en comprar los siguientes productos:\n\n`;
                 let total = 0;
@@ -2257,67 +2589,26 @@
                 window.open(`https://t.me/${telegramUser}?text=${encodeURIComponent(message)}`, '_blank');
             }
 
-            // Limpiar la bolsa después de enviar
             clearBag();
             closeBagModal();
         }
 
         function setupEventListeners() {
-            // Menú toggle
             elements.menuToggle.addEventListener('click', toggleSideMenu);
             elements.closeMenu.addEventListener('click', closeSideMenu);
             elements.overlay.addEventListener('click', closeSideMenu);
 
-            // Botón de Telegram del menú
-            document.getElementById('support-menu-btn').addEventListener('click', () => {
-                const message = '¡Hola! Necesito soporte con mi compra en Venta por todo Cuba.';
-                window.open(`https://t.me/${telegramUsername}?text=${encodeURIComponent(message)}`, '_blank');
-                closeSideMenu();
-            });
-
-            // Botón de vendedor del menú
             elements.sellerMenuBtn.addEventListener('click', () => {
                 window.open(sellerRegistrationUrl, '_blank');
                 closeSideMenu();
             });
 
-            // Botón de vendedor principal
             elements.sellerBtn.addEventListener('click', () => {
                 window.open(sellerRegistrationUrl, '_blank');
             });
 
-            // Botón "Ver todas las categorías"
             elements.viewAllCategories.addEventListener('click', toggleSideMenu);
 
-            // Botón de Telegram flotante
-            elements.supportTelegram.addEventListener('click', () => {
-                const message = '¡Hola! Necesito soporte con mi compra en Venta por todo Cuba.';
-                window.open(`https://t.me/${telegramUsername}?text=${encodeURIComponent(message)}`, '_blank');
-            });
-
-            // Footer buttons
-            elements.homeBtn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                document.querySelectorAll('.footer-item').forEach(item => item.classList.remove('active'));
-                elements.homeBtn.classList.add('active');
-                filterProductsByCategory('all');
-                closeSideMenu();
-            });
-
-            elements.categoriesBtn.addEventListener('click', () => {
-                toggleSideMenu();
-                document.querySelectorAll('.footer-item').forEach(item => item.classList.remove('active'));
-                elements.categoriesBtn.classList.add('active');
-            });
-
-            elements.contactBtn.addEventListener('click', () => {
-                const message = '¡Hola! Necesito información sobre los productos de Venta por todo Cuba.';
-                window.open(`https://t.me/${telegramUsername}?text=${encodeURIComponent(message)}`, '_blank');
-                document.querySelectorAll('.footer-item').forEach(item => item.classList.remove('active'));
-                elements.contactBtn.classList.add('active');
-            });
-
-            // Modal de imagen
             elements.imageModalClose.addEventListener('click', closeImageModal);
             elements.imageModal.addEventListener('click', (e) => {
                 if (e.target === elements.imageModal) {
@@ -2325,7 +2616,6 @@
                 }
             });
 
-            // Compartir imagen
             elements.shareBtn.addEventListener('click', () => {
                 if (navigator.share) {
                     navigator.share({
@@ -2343,13 +2633,11 @@
                 }
             });
 
-            // Búsqueda
             elements.searchToggle.addEventListener('click', toggleSearchBar);
             elements.searchBack.addEventListener('click', toggleSearchBar);
             elements.searchInput.addEventListener('input', handleSearchInput);
             elements.searchClear.addEventListener('click', clearSearch);
 
-            // Bolsa de compra
             elements.bagBtn.addEventListener('click', openBagModal);
             elements.bagModalClose.addEventListener('click', closeBagModal);
             elements.bagModal.addEventListener('click', (e) => {
@@ -2360,19 +2648,54 @@
             elements.bagClearBtn.addEventListener('click', clearBag);
             elements.bagCheckoutBtn.addEventListener('click', checkoutBag);
 
-            // Event delegation para botones dinámicos
+            elements.municipalityDialogClose.addEventListener('click', closeMunicipalityDialog);
+            elements.municipalityDialogCancel.addEventListener('click', closeMunicipalityDialog);
+            elements.municipalityDialogConfirm.addEventListener('click', () => {
+                const province = elements.provinceSelect.value;
+                const municipality = elements.municipalitySelect.value;
+                
+                if (municipality) {
+                    const location = { province, municipality };
+                    localStorage.setItem('selectedLocation', JSON.stringify(location));
+                    updateLocationBadge(province, municipality);
+                    filterProductsByLocation(province, municipality);
+                    closeMunicipalityDialog();
+                    showConfirmationDialog(province, municipality);
+                }
+            });
+
+            elements.confirmationDialogClose.addEventListener('click', closeConfirmationDialog);
+            elements.confirmationDialogOk.addEventListener('click', closeConfirmationDialog);
+
+            elements.floatingHome.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                document.querySelectorAll('.floating-nav-item').forEach(item => item.classList.remove('active'));
+                elements.floatingHome.classList.add('active');
+                filterProductsByCategory('all');
+                closeSideMenu();
+            });
+
+            elements.floatingCategories.addEventListener('click', () => {
+                toggleSideMenu();
+                document.querySelectorAll('.floating-nav-item').forEach(item => item.classList.remove('active'));
+                elements.floatingCategories.classList.add('active');
+            });
+
+            elements.floatingCart.addEventListener('click', () => {
+                openBagModal();
+                document.querySelectorAll('.floating-nav-item').forEach(item => item.classList.remove('active'));
+                elements.floatingCart.classList.add('active');
+            });
+
             document.addEventListener('click', (e) => {
-                // Botón de compra ahora
                 if (e.target.classList.contains('buy-now') || e.target.closest('.buy-now')) {
                     handleBuyNowClick(e);
                 }
                 
-                // Botón de añadir a la bolsa
                 if (e.target.classList.contains('add-to-bag-btn') || e.target.closest('.add-to-bag-btn')) {
                     handleAddToBagClick(e);
                 }
                 
-                // Botones de cantidad
                 if (e.target.classList.contains('plus') || e.target.closest('.plus')) {
                     handleQuantityChange(e, 1);
                 }
@@ -2381,17 +2704,14 @@
                     handleQuantityChange(e, -1);
                 }
                 
-                // Características del producto
                 if (e.target.classList.contains('toggle-features') || e.target.closest('.toggle-features')) {
                     toggleFeatures(e);
                 }
                 
-                // Imagen del producto
                 if (e.target.classList.contains('product-image') || e.target.closest('.product-image')) {
                     handleProductImageClick(e);
                 }
                 
-                // Ver más descripción
                 if (e.target.classList.contains('read-more') || e.target.closest('.read-more')) {
                     toggleDescription(e);
                 }
@@ -2419,10 +2739,8 @@
             const quantity = parseInt(productElement.querySelector('.quantity').textContent);
             
             if (product) {
-                // Verificar si el producto tiene un vendedor específico
                 if (!product.telegram) {
-                    // Si no tiene vendedor, mostrar mensaje de error o usar el soporte general
-                    alert('Este producto no tiene un vendedor asignado. Por favor contacte al soporte.');
+                    showConfirmationDialog('Atención', 'Este producto no tiene un vendedor asignado. Por favor contacte al soporte.');
                     const message = `¡Hola! Estoy interesado en comprar:\n\n` +
                                    `- ${product.name}\n` +
                                    `Cantidad: ${quantity}\n` +
@@ -2452,11 +2770,10 @@
             
             addToBag(productId, quantity);
             
-            // Efecto visual de confirmación
             const btn = e.target.classList.contains('add-to-bag-btn') ? e.target : e.target.closest('.add-to-bag-btn');
             btn.innerHTML = '<i class="fas fa-check" style="margin-right: 8px;"></i> Añadido';
-            btn.style.backgroundColor = '#4CAF50';
-            btn.style.borderColor = '#4CAF50';
+            btn.style.backgroundColor = '#10B981';
+            btn.style.borderColor = '#10B981';
             
             setTimeout(() => {
                 btn.innerHTML = '<i class="fas fa-shopping-bag" style="margin-right: 8px;"></i> Añadir a la bolsa';
@@ -2605,7 +2922,7 @@
 
         function setupRippleEffect() {
             document.addEventListener('click', function(e) {
-                const target = e.target.closest('.telegram-btn, .quantity-btn, .menu-toggle, .search-toggle, .footer-item, .seller-btn, .add-to-bag-btn, .category-card');
+                const target = e.target.closest('.telegram-btn, .quantity-btn, .menu-toggle, .search-toggle, .seller-btn, .add-to-bag-btn, .category-card, .floating-nav-item');
                 if (target) {
                     const rect = target.getBoundingClientRect();
                     const x = e.clientX - rect.left;
@@ -2625,8 +2942,21 @@
             });
         }
 
-        // Función global para mostrar todos los productos (usada en el botón de "Mostrar todos")
-        window.showAllProducts = showAllProducts;
+        function showConfirmationDialog(title, message) {
+            elements.confirmationText.textContent = message;
+            elements.confirmationDialog.classList.add('show');
+        }
+
+        window.showAllProducts = function() {
+            const productElements = document.querySelectorAll('.product-item');
+            productElements.forEach(element => {
+                element.style.display = 'flex';
+            });
+            
+            elements.provinceSelect.value = '';
+            elements.locationBadge.classList.remove('show');
+            localStorage.removeItem('selectedLocation');
+        };
     </script>
 </body>
 </html>
